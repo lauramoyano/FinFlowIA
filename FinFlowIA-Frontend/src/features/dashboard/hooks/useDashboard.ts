@@ -1,0 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { dashboardApi } from "@/features/dashboard/api/dashboard.api";
+
+export function useDashboard() {
+  return useQuery({
+    queryKey: ["dashboard"],
+    queryFn: dashboardApi.getDashboard,
+    staleTime: 1000 * 60, // 1 minute
+  });
+}

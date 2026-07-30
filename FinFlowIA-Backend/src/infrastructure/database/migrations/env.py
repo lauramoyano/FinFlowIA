@@ -7,8 +7,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 # Import all models so Alembic can detect them
 from src.shared.domain.base_entity import Base  # noqa: F401
-from src.modules.auth.models import User  # noqa: F401
-from src.modules.transactions.models import Transaction  # noqa: F401
+from src.modules.auth.models import RefreshToken, User  # noqa: F401
+from src.modules.transactions.models import Category, Transaction  # noqa: F401
+from src.modules.ai.models import AICategorizationLog  # noqa: F401
 
 from src.config.settings import settings
 

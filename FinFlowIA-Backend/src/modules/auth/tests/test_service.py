@@ -1,4 +1,5 @@
 import uuid
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -22,6 +23,8 @@ class TestAuthService:
         new_user.full_name = "New User"
         new_user.is_active = True
         new_user.hashed_password = "hashed"
+        new_user.created_at = datetime.now(UTC)
+        new_user.updated_at = datetime.now(UTC)
         mock_repo.create.return_value = new_user
 
         request = RegisterRequest(

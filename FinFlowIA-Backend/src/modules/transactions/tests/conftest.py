@@ -1,5 +1,5 @@
 import uuid
-from datetime import date
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from unittest.mock import AsyncMock
 
@@ -48,4 +48,6 @@ def sample_transaction(user_id: uuid.UUID) -> Transaction:
     t.ai_confidence = 0.95
     t.transaction_date = date.today()
     t.notes = None
+    t.created_at = datetime.now(UTC)
+    t.updated_at = datetime.now(UTC)
     return t

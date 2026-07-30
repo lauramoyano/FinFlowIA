@@ -2,9 +2,16 @@ import uuid
 from datetime import date
 
 from fastapi import APIRouter, Depends, Query, status
+from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config.database import get_db
+from src.config.settings import settings
+from src.infrastructure.cache.redis_client import get_redis
+from src.modules.ai.cache import LLMCache
+from src.modules.ai.providers.anthropic import AnthropicProvider
+from src.modules.ai.providers.openai import OpenAIProvider
+from src.modules.ai.service import AIService
 from src.modules.auth.dependencies import get_current_user
 from src.modules.auth.models import User
 from src.modules.transactions.categorizer import TransactionCategorizer
@@ -20,20 +27,19 @@ from src.shared.schemas.response import ApiResponse, PaginatedResponse
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
 
 
-def get_transaction_service(session: AsyncSession = Depends(get_db)) -> TransactionService:
-    from src.modules.ai.cache import LLMCache
-    from src.modules.ai.providers.anthropic import AnthropicProvider
-    from src.modules.ai.service import AIService
-    from src.config.settings import settings
-    from src.infrastructure.cache.redis_client import get_redis
-
-    # These would normally be injected via DI container
+def get_transaction_service(
+    session: AsyncSession = Depends(get_db),
+    redis_client: Redis | None = Depends(get_redis),
+) -> TransactionService:
+    # These would normally be injected via a DI container
     repo = TransactionRepository(session)
-    # Simple categorizer with AI service
+    fallback = (
+        OpenAIProvider(api_key=settings.openai_api_key) if settings.openai_api_key else None
+    )
     ai_service = AIService(
         primary=AnthropicProvider(api_key=settings.anthropic_api_key),
-        fallback=None,
-        cache=LLMCache(redis_client=None),  # type: ignore
+        fallback=fallback,
+        cache=LLMCache(redis_client=redis_client, ttl_seconds=settings.llm_cache_ttl_seconds),
     )
     categorizer = TransactionCategorizer(ai_service=ai_service)
     return TransactionService(repo=repo, categorizer=categorizer)

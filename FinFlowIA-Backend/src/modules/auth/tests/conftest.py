@@ -1,4 +1,5 @@
 import uuid
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock
 
 import pytest
@@ -16,6 +17,8 @@ def mock_user() -> User:
     user.hashed_password = "$2b$04$test_hash"  # low rounds for tests
     user.full_name = "Test User"
     user.is_active = True
+    user.created_at = datetime.now(UTC)
+    user.updated_at = datetime.now(UTC)
     return user
 
 

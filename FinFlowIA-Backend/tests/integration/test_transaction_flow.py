@@ -100,4 +100,4 @@ class TestTransactionFlow:
     async def test_unauthorized_access_returns_401(self, client: AsyncClient) -> None:
         """Test that endpoints require authentication."""
         response = await client.get("/api/v1/transactions")
-        assert response.status_code == 403  # HTTPBearer returns 403 when missing
+        assert response.status_code == 401  # missing credentials -> HTTPBearer 401

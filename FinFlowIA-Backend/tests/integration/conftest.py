@@ -1,32 +1,34 @@
 """Integration test configuration with real PostgreSQL database."""
 
-import asyncio
 from collections.abc import AsyncGenerator
 
-import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from src.config.database import get_db
 from src.config.settings import settings
 from src.shared.domain.base_entity import Base
 
-# Use test database URL from .env.test
-TEST_DATABASE_URL = settings.database_url.replace("/financeai", "/financeai_test")
+# Derive the test database name from settings.database_url by replacing only
+# the database component, not a blind string .replace() — the default user
+# and database are both literally "financeai", so a naive substring replace
+# also corrupts the username.
+_test_url = make_url(settings.database_url)
+TEST_DATABASE_URL = str(_test_url.set(database=f"{_test_url.database}_test"))
 
 
-@pytest.fixture(scope="session")
-def event_loop():
-    """Create an event loop for the test session."""
-    loop = asyncio.new_event_loop()
-    yield loop
-    loop.close()
-
-
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture
 async def test_engine():
-    """Create a test database engine and initialize schema."""
+    """
+    Create a test database engine and initialize schema, scoped per test function.
+
+    Not session-scoped: pytest-asyncio 1.x gives each async test its own event
+    loop by default, and an engine/connection pool created in one test's loop
+    breaks ("another operation is in progress") when reused from another
+    test's loop.
+    """
     engine = create_async_engine(TEST_DATABASE_URL, echo=False)
 
     async with engine.begin() as conn:

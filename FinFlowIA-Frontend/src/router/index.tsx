@@ -1,7 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { ProtectedRoute } from "@/shared/components/ProtectedRoute";
-import { ErrorBoundary } from "@/shared/components/ErrorBoundary";
 import { LoginPage } from "@/pages/LoginPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { TransactionsPage } from "@/pages/TransactionsPage";

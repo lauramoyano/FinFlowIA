@@ -1,7 +1,7 @@
-import structlog
-from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
+import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app
@@ -11,9 +11,10 @@ from src.infrastructure.cache.redis_client import close_redis_client, get_redis_
 from src.infrastructure.observability.health import router as health_router
 from src.infrastructure.observability.tracing import setup_tracing
 from src.modules.auth.router import router as auth_router
-from src.modules.transactions.router import router as transactions_router
-from src.modules.reports.router import router as reports_router
 from src.modules.dashboard.router import router as dashboard_router
+from src.modules.reports.router import router as reports_router
+from src.modules.transactions.category_router import router as categories_router
+from src.modules.transactions.router import router as transactions_router
 from src.shared.middleware.correlation_id import CorrelationIdMiddleware
 from src.shared.middleware.error_handler import register_exception_handlers
 from src.shared.middleware.logging import RequestLoggingMiddleware
@@ -106,6 +107,7 @@ def create_app() -> FastAPI:
     app.include_router(health_router)
     app.include_router(auth_router, prefix=API_PREFIX)
     app.include_router(transactions_router, prefix=API_PREFIX)
+    app.include_router(categories_router, prefix=API_PREFIX)
     app.include_router(reports_router, prefix=API_PREFIX)
     app.include_router(dashboard_router, prefix=API_PREFIX)
 

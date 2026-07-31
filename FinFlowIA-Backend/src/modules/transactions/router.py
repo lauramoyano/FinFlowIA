@@ -15,6 +15,7 @@ from src.modules.ai.service import AIService
 from src.modules.auth.dependencies import get_current_user
 from src.modules.auth.models import User
 from src.modules.transactions.categorizer import TransactionCategorizer
+from src.modules.transactions.category_repository import CategoryRepository
 from src.modules.transactions.repository import TransactionRepository
 from src.modules.transactions.schemas import (
     CreateTransactionRequest,
@@ -42,7 +43,8 @@ def get_transaction_service(
         cache=LLMCache(redis_client=redis_client, ttl_seconds=settings.llm_cache_ttl_seconds),
     )
     categorizer = TransactionCategorizer(ai_service=ai_service)
-    return TransactionService(repo=repo, categorizer=categorizer)
+    category_repo = CategoryRepository(session)
+    return TransactionService(repo=repo, categorizer=categorizer, category_repo=category_repo)
 
 
 @router.post(

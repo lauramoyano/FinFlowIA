@@ -25,6 +25,7 @@ class TransactionRepository:
         transaction_type: str,
         transaction_date: date,
         category: str | None = None,
+        category_id: uuid.UUID | None = None,
         ai_confidence: float | None = None,
         notes: str | None = None,
     ) -> Transaction:
@@ -35,6 +36,7 @@ class TransactionRepository:
             transaction_type=transaction_type,
             transaction_date=transaction_date,
             category=category,
+            category_id=category_id,
             ai_confidence=ai_confidence,
             notes=notes,
         )

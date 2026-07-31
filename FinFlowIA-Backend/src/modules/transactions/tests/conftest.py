@@ -7,6 +7,7 @@ import pytest
 
 from src.modules.ai.schemas import CategoryResult
 from src.modules.transactions.categorizer import TransactionCategorizer
+from src.modules.transactions.category_repository import CategoryRepository
 from src.modules.transactions.models import Transaction
 from src.modules.transactions.repository import TransactionRepository
 from src.modules.transactions.service import TransactionService
@@ -32,8 +33,23 @@ def mock_categorizer() -> AsyncMock:
 
 
 @pytest.fixture
-def transaction_service(mock_repo: AsyncMock, mock_categorizer: AsyncMock) -> TransactionService:
-    return TransactionService(repo=mock_repo, categorizer=mock_categorizer)
+def mock_category_repo() -> AsyncMock:
+    mock = AsyncMock(spec=CategoryRepository)
+    # No category-linking by default; tests that care about category_id
+    # resolution override this explicitly.
+    mock.get_by_name.return_value = None
+    return mock
+
+
+@pytest.fixture
+def transaction_service(
+    mock_repo: AsyncMock,
+    mock_categorizer: AsyncMock,
+    mock_category_repo: AsyncMock,
+) -> TransactionService:
+    return TransactionService(
+        repo=mock_repo, categorizer=mock_categorizer, category_repo=mock_category_repo
+    )
 
 
 @pytest.fixture
@@ -45,6 +61,7 @@ def sample_transaction(user_id: uuid.UUID) -> Transaction:
     t.amount = Decimal("25.00")
     t.transaction_type = "expense"
     t.category = "food"
+    t.category_id = None
     t.ai_confidence = 0.95
     t.transaction_date = date.today()
     t.notes = None

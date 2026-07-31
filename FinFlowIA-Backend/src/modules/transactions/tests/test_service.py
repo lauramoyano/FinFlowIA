@@ -5,11 +5,10 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from src.modules.ai.schemas import CategoryResult
-from src.modules.transactions.models import Transaction
+from src.modules.transactions.enums import TransactionType
+from src.modules.transactions.models import Category, Transaction
 from src.modules.transactions.schemas import CreateTransactionRequest
 from src.modules.transactions.service import TransactionService
-from src.modules.transactions.enums import TransactionType
 from src.shared.exceptions.not_found import NotFoundException
 
 
@@ -38,6 +37,59 @@ class TestTransactionService:
             description="Almuerzo restaurante",
             amount=Decimal("25.00"),
         )
+
+    @pytest.mark.asyncio
+    async def test_create_transaction_links_category_id_when_name_matches(
+        self,
+        transaction_service: TransactionService,
+        mock_category_repo: AsyncMock,
+        mock_repo: AsyncMock,
+        user_id: uuid.UUID,
+        sample_transaction: Transaction,
+    ) -> None:
+        matched_category = Category()
+        matched_category.id = uuid.uuid4()
+        mock_category_repo.get_by_name.return_value = matched_category
+        mock_repo.create.return_value = sample_transaction
+
+        data = CreateTransactionRequest(
+            description="Almuerzo restaurante",
+            amount=Decimal("25.00"),
+            transaction_type=TransactionType.EXPENSE,
+            transaction_date=date.today(),
+            category="food",  # type: ignore
+        )
+
+        await transaction_service.create(data, user_id=user_id)
+
+        mock_category_repo.get_by_name.assert_called_once_with(
+            user_id=user_id, name="food", transaction_type="expense"
+        )
+        assert mock_repo.create.call_args.kwargs["category_id"] == matched_category.id
+
+    @pytest.mark.asyncio
+    async def test_create_transaction_leaves_category_id_none_without_match(
+        self,
+        transaction_service: TransactionService,
+        mock_category_repo: AsyncMock,
+        mock_repo: AsyncMock,
+        user_id: uuid.UUID,
+        sample_transaction: Transaction,
+    ) -> None:
+        mock_category_repo.get_by_name.return_value = None
+        mock_repo.create.return_value = sample_transaction
+
+        data = CreateTransactionRequest(
+            description="Algo raro",
+            amount=Decimal("10.00"),
+            transaction_type=TransactionType.EXPENSE,
+            transaction_date=date.today(),
+            category="other",  # type: ignore
+        )
+
+        await transaction_service.create(data, user_id=user_id)
+
+        assert mock_repo.create.call_args.kwargs["category_id"] is None
 
     @pytest.mark.asyncio
     async def test_create_transaction_skips_categorizer_if_category_provided(

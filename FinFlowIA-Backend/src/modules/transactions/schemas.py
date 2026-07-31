@@ -47,6 +47,7 @@ class TransactionResponse(BaseModel):
     amount: Decimal
     transaction_type: str
     category: str | None
+    category_id: uuid.UUID | None
     ai_confidence: float | None
     transaction_date: date
     notes: str | None
@@ -62,3 +63,23 @@ class TransactionListResponse(BaseModel):
     page: int
     page_size: int
     total_pages: int
+
+
+class CreateCategoryRequest(BaseModel):
+    """Request schema for creating a custom category."""
+
+    name: str = Field(min_length=1, max_length=50)
+    transaction_type: TransactionType
+    icon: str | None = Field(default=None, max_length=50)
+
+
+class CategoryResponse(BaseModel):
+    """Response schema for a category — system default or user-defined."""
+
+    model_config = {"from_attributes": True}
+
+    id: uuid.UUID
+    name: str
+    transaction_type: str
+    icon: str | None
+    is_default: bool

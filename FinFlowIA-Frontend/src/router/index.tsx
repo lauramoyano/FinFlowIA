@@ -9,6 +9,13 @@ import { ReportsPage } from "@/pages/ReportsPage";
 export const router = createBrowserRouter([
   // Public routes
   {
+    path: "/",
+    lazy: async () => {
+      const { LandingPage } = await import("@/pages/LandingPage");
+      return { Component: LandingPage };
+    },
+  },
+  {
     path: "/login",
     element: <LoginPage />,
   },
@@ -27,10 +34,6 @@ export const router = createBrowserRouter([
       {
         element: <AppLayout />,
         children: [
-          {
-            index: true,
-            element: <Navigate to="/dashboard" replace />,
-          },
           {
             path: "dashboard",
             element: <DashboardPage />,
@@ -51,6 +54,6 @@ export const router = createBrowserRouter([
   // Catch-all redirect
   {
     path: "*",
-    element: <Navigate to="/dashboard" replace />,
+    element: <Navigate to="/" replace />,
   },
 ]);

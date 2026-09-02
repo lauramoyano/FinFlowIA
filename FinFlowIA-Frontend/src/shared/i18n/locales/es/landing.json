@@ -1,0 +1,157 @@
+{
+  "skipToContent": "Saltar al contenido principal",
+  "nav": {
+    "ariaLabel": "Principal",
+    "ariaLabelMobile": "Principal (móvil)",
+    "features": "Características",
+    "howItWorks": "Cómo funciona",
+    "faq": "Preguntas frecuentes",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "goToDashboard": "Ir al dashboard",
+    "login": "Iniciar sesión",
+    "getStarted": "Comenzar gratis"
+  },
+  "hero": {
+    "badge": "Categorización automática con IA",
+    "titleLine1": "Las finanzas de tu negocio,",
+    "titleHighlight": "en piloto automático",
+    "subtitle": "Registrá tus ingresos y gastos, dejá que la inteligencia artificial los clasifique por vos y mirá cómo le va a tu negocio en un dashboard siempre actualizado.",
+    "ctaPrimary": "Comenzar gratis",
+    "ctaSecondary": "Ver cómo funciona",
+    "noCreditCard": "Sin tarjeta de crédito · Configuración en minutos",
+    "preview": {
+      "balanceLabel": "Balance de julio",
+      "balanceValue": "$284.500",
+      "changeLabel": "+12,4%",
+      "incomeLabel": "Ingresos",
+      "incomeValue": "$412.000",
+      "expensesLabel": "Gastos",
+      "expensesValue": "$127.500",
+      "aiTag": "Categorizado por IA",
+      "aiExample": "🍔 Alimentos · 96%"
+    }
+  },
+  "trust": {
+    "heading": "Por qué confiar en FinFlowIA",
+    "items": {
+      "powered-by-claude": {
+        "title": "Impulsado por Claude (Anthropic)",
+        "description": "La misma familia de modelos de IA usada por miles de empresas."
+      },
+      "end-to-end-encryption": {
+        "title": "Cifrado extremo a extremo",
+        "description": "Tus credenciales y movimientos viajan siempre cifrados."
+      },
+      "built-for-small-business": {
+        "title": "Pensado para pequeños negocios",
+        "description": "Diseñado desde cero para quienes llevan sus cuentas solos."
+      }
+    }
+  },
+  "features": {
+    "heading": "Todo lo que necesitás para llevar tus finanzas al día",
+    "subtitle": "FinFlowIA combina inteligencia artificial y una interfaz simple para que administrar el dinero de tu negocio deje de ser una carga.",
+    "items": {
+      "ai-categorization": {
+        "title": "Categorización automática con IA",
+        "description": "Cada movimiento se analiza y clasifica solo, con un motor de IA entrenado para el lenguaje de los pequeños negocios. Vos revisás, no tipeás."
+      },
+      "realtime-dashboard": {
+        "title": "Dashboard en tiempo real",
+        "description": "Ingresos, gastos y balance del mes de un vistazo, con el detalle por categoría siempre actualizado apenas cargás un movimiento."
+      },
+      "exportable-reports": {
+        "title": "Reportes exportables",
+        "description": "Generá reportes en CSV o PDF listos para compartir con tu contador o tu equipo, filtrados por el período que necesites."
+      },
+      "custom-categories": {
+        "title": "Categorías a tu medida",
+        "description": "Empezá con las categorías predefinidas y sumá las propias cuando tu negocio lo necesite — vos decidís cómo se organizan tus finanzas."
+      },
+      "bank-grade-security": {
+        "title": "Seguridad de nivel bancario",
+        "description": "Autenticación con JWT, contraseñas con hashing bcrypt y comunicación cifrada. Tus datos financieros, protegidos en cada paso."
+      },
+      "responsive-anywhere": {
+        "title": "Donde estés, como quieras",
+        "description": "Una interfaz responsive pensada para que cargues un gasto desde el celular en el momento, y revises los números desde la computadora."
+      }
+    }
+  },
+  "howItWorks": {
+    "heading": "Empezá a usarlo en cuatro pasos",
+    "subtitle": "Sin curva de aprendizaje: de crear tu cuenta a tener tu primer reporte te lleva minutos.",
+    "items": {
+      "create-account": {
+        "title": "Creá tu cuenta",
+        "description": "Registrate en menos de un minuto. Sin tarjeta, sin vueltas."
+      },
+      "log-transactions": {
+        "title": "Cargá tus movimientos",
+        "description": "Registrá cada ingreso y gasto con una descripción y un monto."
+      },
+      "ai-categorizes": {
+        "title": "Dejá que la IA categorice",
+        "description": "En segundos, cada transacción queda clasificada automáticamente."
+      },
+      "clear-dashboard": {
+        "title": "Mirá tu negocio con claridad",
+        "description": "Dashboard y reportes siempre al día, sin planillas manuales."
+      }
+    }
+  },
+  "faq": {
+    "heading": "Preguntas frecuentes",
+    "subtitle": "¿No encontrás lo que buscás? Escribinos y te respondemos.",
+    "items": {
+      "credit-card": {
+        "question": "¿Necesito tarjeta de crédito para empezar?",
+        "answer": "No. Podés crear tu cuenta y empezar a cargar movimientos sin ingresar ningún medio de pago."
+      },
+      "how-ai-works": {
+        "question": "¿Cómo funciona la categorización con inteligencia artificial?",
+        "answer": "Cuando cargás una transacción sin elegir una categoría, el sistema envía la descripción y el monto a un modelo de lenguaje que la clasifica automáticamente en la categoría más adecuada, con un nivel de confianza asociado."
+      },
+      "data-security": {
+        "question": "¿Mis datos financieros están seguros?",
+        "answer": "Sí. Las contraseñas se guardan con hashing bcrypt, la sesión se maneja con JWT de corta duración y toda la comunicación con el servidor va cifrada."
+      },
+      "export-reports": {
+        "question": "¿Puedo exportar mis reportes?",
+        "answer": "Sí, podés generar reportes filtrados por período y exportarlos en CSV o PDF para compartirlos con tu contador o tu equipo."
+      },
+      "any-business": {
+        "question": "¿Sirve para cualquier tipo de negocio?",
+        "answer": "FinFlowIA está pensado para pequeños negocios y profesionales independientes. Las categorías predefinidas cubren los casos más comunes, y podés sumar las tuyas propias si tu negocio lo necesita."
+      },
+      "mobile-usage": {
+        "question": "¿Puedo usarlo desde el celular?",
+        "answer": "Sí, la aplicación es completamente responsive: podés cargar un gasto apenas lo hacés y revisar tu dashboard desde cualquier dispositivo."
+      }
+    }
+  },
+  "cta": {
+    "heading": "Empezá a organizar tus finanzas hoy",
+    "subtitle": "Creá tu cuenta gratis y dejá que la IA se encargue de categorizar cada movimiento de tu negocio.",
+    "button": "Comenzar gratis"
+  },
+  "footer": {
+    "tagline": "Gestión financiera inteligente para pequeños negocios.",
+    "columns": {
+      "product": "Producto",
+      "account": "Cuenta",
+      "legal": "Legal"
+    },
+    "links": {
+      "features": "Características",
+      "howItWorks": "Cómo funciona",
+      "faq": "Preguntas frecuentes",
+      "login": "Iniciar sesión",
+      "createAccount": "Crear cuenta",
+      "privacy": "Privacidad",
+      "terms": "Términos de servicio"
+    },
+    "rights": "Todos los derechos reservados."
+  }
+}

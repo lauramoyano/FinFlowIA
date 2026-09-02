@@ -35,11 +35,13 @@ test.describe("Transaction Management", () => {
 
     // Apply income filter
     await page.selectOption('[name="transaction_type"]', "income");
-    await page.click('button:has-text("Apply")');
+    await page.click('[data-testid="apply-filters-button"]');
 
-    // All visible transactions should be income type
-    const typeLabels = page.locator("text=Income");
-    await expect(typeLabels.first()).toBeVisible();
+    // All visible transactions should be income type. Selector is on a
+    // data attribute (not translated text) so it works regardless of the
+    // active UI language (es/en, see shared/i18n).
+    const incomeRows = page.locator('[data-transaction-type="income"]');
+    await expect(incomeRows.first()).toBeVisible();
   });
 
   test("dashboard shows correct totals after creating a transaction", async ({ page }) => {
@@ -51,12 +53,12 @@ test.describe("Transaction Management", () => {
     await page.selectOption('[name="type"]', "income");
     await page.click('[type="submit"]');
 
-    // Navigate to dashboard
-    await page.click("text=Dashboard");
+    // Navigate to dashboard via the sidebar link (href is language-agnostic).
+    await page.click('a[href="/dashboard"]');
     await expect(page).toHaveURL("/dashboard");
 
-    // Dashboard should load without error
-    await expect(page.locator("h1:has-text('Dashboard')")).toBeVisible();
+    // Dashboard should load without error.
+    await expect(page.locator('[data-testid="page-title"]')).toBeVisible();
   });
 
   test("user can delete a transaction", async ({ page }) => {
@@ -73,7 +75,7 @@ test.describe("Transaction Management", () => {
     ).toContainText("Transaction to delete");
 
     // Delete the transaction
-    await page.click("button:has-text('Delete')");
+    await page.click('[data-testid="delete-transaction-button"]');
 
     // Verify it's removed
     await expect(
@@ -83,7 +85,11 @@ test.describe("Transaction Management", () => {
 });
 
 test.describe("Authentication", () => {
-  test("unauthenticated users are redirected to login", async ({ page }) => {
+  // NOTE: login gating is intentionally disabled while the rest of the
+  // frontend is being built (see router/index.tsx TODO(auth-final-phase)),
+  // so unauthenticated users currently CAN reach /dashboard. Re-enable this
+  // test once ProtectedRoute is wired back in.
+  test.skip("unauthenticated users are redirected to login", async ({ page }) => {
     await page.goto("/dashboard");
     await expect(page).toHaveURL("/login");
   });
@@ -94,8 +100,6 @@ test.describe("Authentication", () => {
     await page.fill('[name="password"]', "wrongpassword");
     await page.click('[type="submit"]');
 
-    await expect(
-      page.locator("text=Invalid email or password"),
-    ).toBeVisible();
+    await expect(page.locator('[data-testid="login-error"]')).toBeVisible();
   });
 });

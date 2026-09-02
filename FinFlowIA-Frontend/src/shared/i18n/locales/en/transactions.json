@@ -1,0 +1,89 @@
+{
+  "page": {
+    "title": "Transactions",
+    "totalCount_one": "{{count}} total transaction",
+    "totalCount_other": "{{count}} total transactions",
+    "addTransaction": "+ Add Transaction",
+    "newTransaction": "New Transaction",
+    "pageOf": "Page {{page}} of {{totalPages}}"
+  },
+  "list": {
+    "columns": {
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "type": "Type",
+      "amount": "Amount",
+      "actions": "Actions"
+    },
+    "income": "Income",
+    "expense": "Expense",
+    "delete": "Delete",
+    "emptyTitle": "No transactions yet",
+    "emptySubtitle": "Add your first transaction to get started"
+  },
+  "form": {
+    "createError": "Failed to create transaction. Please try again.",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "e.g., Lunch with client",
+    "amountLabel": "Amount",
+    "typeLabel": "Type",
+    "dateLabel": "Date",
+    "categoryLabel": "Category (optional — AI will suggest)",
+    "categoryAiOption": "Let AI categorize",
+    "notesLabel": "Notes (optional)",
+    "notesPlaceholder": "Additional context...",
+    "submit": "Add Transaction",
+    "validation": {
+      "descriptionRequired": "Description is required",
+      "descriptionTooLong": "Description is too long",
+      "amountRequired": "Amount is required",
+      "amountMustBePositive": "Amount must be a positive number",
+      "typeRequired": "Transaction type is required",
+      "dateRequired": "Date is required",
+      "dateFormat": "Date must be in YYYY-MM-DD format",
+      "notesTooLong": "Notes are too long",
+      "categoryTooLong": "Category name is too long"
+    }
+  },
+  "filters": {
+    "typeLabel": "Type",
+    "allTypes": "All types",
+    "categoryLabel": "Category",
+    "allCategories": "All categories",
+    "fromLabel": "From",
+    "toLabel": "To",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "categories": {
+    "food": "Food",
+    "transport": "Transport",
+    "utilities": "Utilities",
+    "supplies": "Supplies",
+    "marketing": "Marketing",
+    "payroll": "Payroll",
+    "rent": "Rent",
+    "equipment": "Equipment",
+    "sales": "Sales",
+    "services": "Services",
+    "other": "Other",
+    "uncategorized": "Uncategorized"
+  },
+  "manager": {
+    "manageButton": "Manage categories",
+    "title": "Manage categories",
+    "subtitle": "Create your own categories or delete the ones you no longer use",
+    "empty": "No categories yet",
+    "default": "Default",
+    "newCategoryLabel": "New category",
+    "newCategoryPlaceholder": "e.g., Software subscriptions",
+    "addCategory": "Add category",
+    "createError": "Failed to create category. Please try again.",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameTooLong": "Name is too long",
+      "typeRequired": "Type is required"
+    }
+  }
+}

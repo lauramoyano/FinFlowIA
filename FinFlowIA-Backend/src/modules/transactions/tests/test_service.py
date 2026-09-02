@@ -57,7 +57,7 @@ class TestTransactionService:
             amount=Decimal("25.00"),
             transaction_type=TransactionType.EXPENSE,
             transaction_date=date.today(),
-            category="food",  # type: ignore
+            category="food",
         )
 
         await transaction_service.create(data, user_id=user_id)
@@ -66,6 +66,40 @@ class TestTransactionService:
             user_id=user_id, name="food", transaction_type="expense"
         )
         assert mock_repo.create.call_args.kwargs["category_id"] == matched_category.id
+
+    @pytest.mark.asyncio
+    async def test_create_transaction_links_custom_category_by_name(
+        self,
+        transaction_service: TransactionService,
+        mock_category_repo: AsyncMock,
+        mock_repo: AsyncMock,
+        user_id: uuid.UUID,
+        sample_transaction: Transaction,
+    ) -> None:
+        """
+        `category` is a plain str (not the CategoryType enum), so a user's
+        custom category name — not one of the 11 system defaults — must
+        also resolve to its Category row by name.
+        """
+        custom_category = Category()
+        custom_category.id = uuid.uuid4()
+        mock_category_repo.get_by_name.return_value = custom_category
+        mock_repo.create.return_value = sample_transaction
+
+        data = CreateTransactionRequest(
+            description="Suscripción software de diseño",
+            amount=Decimal("40.00"),
+            transaction_type=TransactionType.EXPENSE,
+            transaction_date=date.today(),
+            category="suscripciones software",
+        )
+
+        await transaction_service.create(data, user_id=user_id)
+
+        mock_category_repo.get_by_name.assert_called_once_with(
+            user_id=user_id, name="suscripciones software", transaction_type="expense"
+        )
+        assert mock_repo.create.call_args.kwargs["category_id"] == custom_category.id
 
     @pytest.mark.asyncio
     async def test_create_transaction_leaves_category_id_none_without_match(
@@ -84,7 +118,7 @@ class TestTransactionService:
             amount=Decimal("10.00"),
             transaction_type=TransactionType.EXPENSE,
             transaction_date=date.today(),
-            category="other",  # type: ignore
+            category="other",
         )
 
         await transaction_service.create(data, user_id=user_id)
@@ -107,7 +141,7 @@ class TestTransactionService:
             amount=Decimal("25.00"),
             transaction_type=TransactionType.EXPENSE,
             transaction_date=date.today(),
-            category="food",  # type: ignore
+            category="food",
         )
 
         await transaction_service.create(data, user_id=user_id)

@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, PlayCircle, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { buttonVariants } from "@/shared/components/ui/Button";
 import { Badge } from "@/shared/components/ui/Badge";
 import { cn } from "@/shared/lib/utils";
 
 export function HeroSection() {
+  const { t } = useTranslation("landing");
+
   return (
     <section className="relative overflow-hidden">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -16,20 +19,18 @@ export function HeroSection() {
         <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
           <Badge variant="secondary" className="mb-6 gap-1.5 py-1.5 pl-2 pr-3">
             <Sparkles className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-            Categorización automática con IA
+            {t("hero.badge")}
           </Badge>
 
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            Las finanzas de tu negocio,{" "}
+            {t("hero.titleLine1")}{" "}
             <span className="bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">
-              en piloto automático
+              {t("hero.titleHighlight")}
             </span>
           </h1>
 
           <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-            Registrá tus ingresos y gastos, dejá que la inteligencia
-            artificial los clasifique por vos y mirá cómo le va a tu negocio
-            en un dashboard siempre actualizado.
+            {t("hero.subtitle")}
           </p>
 
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
@@ -37,7 +38,7 @@ export function HeroSection() {
               to="/register"
               className={cn(buttonVariants({ size: "lg" }), "w-full gap-2 sm:w-auto")}
             >
-              Comenzar gratis
+              {t("hero.ctaPrimary")}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <a
@@ -48,12 +49,12 @@ export function HeroSection() {
               )}
             >
               <PlayCircle className="h-4 w-4" aria-hidden="true" />
-              Ver cómo funciona
+              {t("hero.ctaSecondary")}
             </a>
           </div>
 
           <p className="mt-4 text-sm text-muted-foreground">
-            Sin tarjeta de crédito · Configuración en minutos
+            {t("hero.noCreditCard")}
           </p>
         </div>
 
@@ -67,6 +68,7 @@ export function HeroSection() {
 
 /** Purely decorative product mockup — not real data, hidden from assistive tech. */
 function HeroPreviewCard() {
+  const { t } = useTranslation("landing");
   const bars = [40, 65, 45, 80, 60, 95, 70];
 
   return (
@@ -74,22 +76,22 @@ function HeroPreviewCard() {
       <div className="animate-float rounded-2xl border border-border bg-card p-6 shadow-2xl shadow-primary/10">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <p className="text-sm text-muted-foreground">Balance de julio</p>
-            <p className="text-3xl font-bold text-foreground">$284.500</p>
+            <p className="text-sm text-muted-foreground">{t("hero.preview.balanceLabel")}</p>
+            <p className="text-3xl font-bold text-foreground">{t("hero.preview.balanceValue")}</p>
           </div>
           <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-            +12,4%
+            {t("hero.preview.changeLabel")}
           </span>
         </div>
 
         <div className="mb-6 grid grid-cols-2 gap-3">
           <div className="rounded-lg bg-muted p-3">
-            <p className="text-xs text-muted-foreground">Ingresos</p>
-            <p className="text-lg font-semibold text-foreground">$412.000</p>
+            <p className="text-xs text-muted-foreground">{t("hero.preview.incomeLabel")}</p>
+            <p className="text-lg font-semibold text-foreground">{t("hero.preview.incomeValue")}</p>
           </div>
           <div className="rounded-lg bg-muted p-3">
-            <p className="text-xs text-muted-foreground">Gastos</p>
-            <p className="text-lg font-semibold text-foreground">$127.500</p>
+            <p className="text-xs text-muted-foreground">{t("hero.preview.expensesLabel")}</p>
+            <p className="text-lg font-semibold text-foreground">{t("hero.preview.expensesValue")}</p>
           </div>
         </div>
 
@@ -105,8 +107,8 @@ function HeroPreviewCard() {
       </div>
 
       <div className="absolute -bottom-8 -left-8 hidden animate-float rounded-xl border border-border bg-card px-4 py-3 shadow-xl [animation-delay:1s] sm:block">
-        <p className="text-xs text-muted-foreground">Categorizado por IA</p>
-        <p className="text-sm font-semibold text-foreground">🍔 Alimentos · 96%</p>
+        <p className="text-xs text-muted-foreground">{t("hero.preview.aiTag")}</p>
+        <p className="text-sm font-semibold text-foreground">{t("hero.preview.aiExample")}</p>
       </div>
     </div>
   );

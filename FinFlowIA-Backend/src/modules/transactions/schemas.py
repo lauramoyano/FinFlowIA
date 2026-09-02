@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, Field, field_validator
 
-from src.modules.transactions.enums import CategoryType, TransactionType
+from src.modules.transactions.enums import TransactionType
 
 
 class CreateTransactionRequest(BaseModel):
@@ -14,7 +14,10 @@ class CreateTransactionRequest(BaseModel):
     amount: Decimal = Field(gt=0, decimal_places=2)
     transaction_type: TransactionType
     transaction_date: date
-    category: CategoryType | None = None
+    # str, not CategoryType: a category can be one of the fixed defaults OR
+    # a custom category name the user created (see CategoryService). Both
+    # are resolved to a Category row by name in TransactionService._resolve_category_id.
+    category: str | None = Field(default=None, max_length=50)
     notes: str | None = Field(default=None, max_length=1000)
 
     @field_validator("amount")
@@ -32,7 +35,7 @@ class UpdateTransactionRequest(BaseModel):
     amount: Decimal | None = Field(default=None, gt=0, decimal_places=2)
     transaction_type: TransactionType | None = None
     transaction_date: date | None = None
-    category: CategoryType | None = None
+    category: str | None = Field(default=None, max_length=50)
     notes: str | None = Field(default=None, max_length=1000)
 
 

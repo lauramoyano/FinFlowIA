@@ -1,9 +1,12 @@
+import { useMemo } from "react";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { CategoryBadge } from "@/features/transactions/components/CategoryBadge";
 import { useDeleteTransaction } from "@/features/transactions/hooks/useCreateTransaction";
 import { Button } from "@/shared/components/ui/Button";
@@ -13,48 +16,51 @@ import type { Transaction } from "@/features/transactions/types/transaction.type
 
 const columnHelper = createColumnHelper<Transaction>();
 
-const columns = [
-  columnHelper.accessor("transaction_date", {
-    header: "Date",
-    cell: (info) => formatDate(info.getValue()),
-  }),
-  columnHelper.accessor("description", {
-    header: "Description",
-    cell: (info) => (
-      <span className="font-medium">{info.getValue()}</span>
-    ),
-  }),
-  columnHelper.accessor("category", {
-    header: "Category",
-    cell: (info) => <CategoryBadge category={info.getValue()} />,
-  }),
-  columnHelper.accessor("transaction_type", {
-    header: "Type",
-    cell: (info) => (
-      <span
-        className={
-          info.getValue() === "income"
-            ? "text-green-600 font-medium"
-            : "text-red-600 font-medium"
-        }
-      >
-        {info.getValue() === "income" ? "Income" : "Expense"}
-      </span>
-    ),
-  }),
-  columnHelper.accessor("amount", {
-    header: "Amount",
-    cell: (info) => {
-      const isIncome = info.row.original.transaction_type === "income";
-      return (
-        <span className={isIncome ? "text-green-600" : "text-red-600"}>
-          {isIncome ? "+" : "-"}
-          {formatCurrency(info.getValue())}
+function buildColumns(t: TFunction<"transactions">) {
+  return [
+    columnHelper.accessor("transaction_date", {
+      header: t("list.columns.date"),
+      cell: (info) => formatDate(info.getValue()),
+    }),
+    columnHelper.accessor("description", {
+      header: t("list.columns.description"),
+      cell: (info) => (
+        <span className="font-medium">{info.getValue()}</span>
+      ),
+    }),
+    columnHelper.accessor("category", {
+      header: t("list.columns.category"),
+      cell: (info) => <CategoryBadge category={info.getValue()} />,
+    }),
+    columnHelper.accessor("transaction_type", {
+      header: t("list.columns.type"),
+      cell: (info) => (
+        <span
+          data-transaction-type={info.getValue()}
+          className={
+            info.getValue() === "income"
+              ? "text-green-600 dark:text-green-400 font-medium"
+              : "text-red-600 dark:text-red-400 font-medium"
+          }
+        >
+          {info.getValue() === "income" ? t("list.income") : t("list.expense")}
         </span>
-      );
-    },
-  }),
-];
+      ),
+    }),
+    columnHelper.accessor("amount", {
+      header: t("list.columns.amount"),
+      cell: (info) => {
+        const isIncome = info.row.original.transaction_type === "income";
+        return (
+          <span className={isIncome ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
+            {isIncome ? "+" : "-"}
+            {formatCurrency(info.getValue())}
+          </span>
+        );
+      },
+    }),
+  ];
+}
 
 interface TransactionListProps {
   transactions: Transaction[];
@@ -63,25 +69,30 @@ interface TransactionListProps {
 
 export function TransactionList({ transactions, isLoading }: TransactionListProps) {
   const deleteMutation = useDeleteTransaction();
+  const { t } = useTranslation("transactions");
 
-  const allColumns = [
-    ...columns,
-    columnHelper.display({
-      id: "actions",
-      header: "Actions",
-      cell: (info) => (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => deleteMutation.mutate(info.row.original.id)}
-          disabled={deleteMutation.isPending}
-          className="text-destructive hover:text-destructive"
-        >
-          Delete
-        </Button>
-      ),
-    }),
-  ];
+  const allColumns = useMemo(() => {
+    const base = buildColumns(t);
+    return [
+      ...base,
+      columnHelper.display({
+        id: "actions",
+        header: t("list.columns.actions"),
+        cell: (info) => (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => deleteMutation.mutate(info.row.original.id)}
+            disabled={deleteMutation.isPending}
+            className="text-destructive hover:text-destructive"
+            data-testid="delete-transaction-button"
+          >
+            {t("list.delete")}
+          </Button>
+        ),
+      }),
+    ];
+  }, [t]);
 
   const table = useReactTable({
     data: transactions,
@@ -103,8 +114,8 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
         className="flex h-48 flex-col items-center justify-center text-muted-foreground"
         data-testid="transaction-list"
       >
-        <p className="text-lg font-medium">No transactions yet</p>
-        <p className="text-sm">Add your first transaction to get started</p>
+        <p className="text-lg font-medium">{t("list.emptyTitle")}</p>
+        <p className="text-sm">{t("list.emptySubtitle")}</p>
       </div>
     );
   }

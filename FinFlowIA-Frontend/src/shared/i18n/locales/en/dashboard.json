@@ -1,0 +1,21 @@
+{
+  "title": "Dashboard",
+  "overviewFor": "Overview for {{period}}",
+  "loadError": "Failed to load dashboard data. Please try again.",
+  "summary": {
+    "totalIncome": "Total Income",
+    "totalExpenses": "Total Expenses",
+    "netBalance": "Net Balance"
+  },
+  "charts": {
+    "expenseBreakdown": "Expense Breakdown",
+    "noExpenseData": "No expense data for this period",
+    "incomeSources": "Income Sources",
+    "noIncomeData": "No income data for this period",
+    "categoryBreakdown": "Category Breakdown",
+    "noData": "No data available",
+    "transactionCount_one": "{{count}} transaction",
+    "transactionCount_other": "{{count}} transactions",
+    "amount": "Amount"
+  }
+}

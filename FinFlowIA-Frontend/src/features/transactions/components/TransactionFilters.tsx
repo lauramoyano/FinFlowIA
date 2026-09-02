@@ -1,4 +1,7 @@
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useCategories } from "@/features/categories/hooks/useCategories";
+import { getCategoryLabel } from "@/features/transactions/lib/category-label";
 import { Button } from "@/shared/components/ui/Button";
 import { Input } from "@/shared/components/ui/Input";
 import type { TransactionFilters } from "@/features/transactions/types/transaction.types";
@@ -10,6 +13,10 @@ interface TransactionFiltersProps {
 
 export function TransactionFiltersBar({ onFilter, onReset }: TransactionFiltersProps) {
   const { register, handleSubmit, reset } = useForm<TransactionFilters>();
+  const { t } = useTranslation("transactions");
+  // Filter dropdown isn't scoped to a single type, so fetch every category
+  // the user can see (defaults + their own custom ones) across both types.
+  const { data: categories = [] } = useCategories();
 
   const onSubmit = (data: TransactionFilters) => {
     // Remove empty values
@@ -30,58 +37,60 @@ export function TransactionFiltersBar({ onFilter, onReset }: TransactionFiltersP
       className="flex flex-wrap gap-3 rounded-lg border bg-card p-4"
     >
       <div className="min-w-[140px]">
-        <label className="text-sm font-medium">Type</label>
+        <label className="text-sm font-medium">{t("filters.typeLabel")}</label>
         <select
           {...register("transaction_type")}
           className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
         >
-          <option value="">All types</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
+          <option value="">{t("filters.allTypes")}</option>
+          <option value="income">{t("list.income")}</option>
+          <option value="expense">{t("list.expense")}</option>
         </select>
       </div>
 
       <div className="min-w-[140px]">
-        <label className="text-sm font-medium">Category</label>
+        <label className="text-sm font-medium">{t("filters.categoryLabel")}</label>
         <select
           {...register("category")}
           className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
         >
-          <option value="">All categories</option>
-          <option value="food">Food</option>
-          <option value="transport">Transport</option>
-          <option value="utilities">Utilities</option>
-          <option value="supplies">Supplies</option>
-          <option value="marketing">Marketing</option>
-          <option value="payroll">Payroll</option>
-          <option value="rent">Rent</option>
-          <option value="equipment">Equipment</option>
-          <option value="sales">Sales</option>
-          <option value="services">Services</option>
-          <option value="other">Other</option>
+          <option value="">{t("filters.allCategories")}</option>
+          {categories
+            .filter((category) => category.name !== "uncategorized")
+            .map((category) => (
+              <option key={category.id} value={category.name}>
+                {getCategoryLabel(t, category.name)}
+              </option>
+            ))}
         </select>
       </div>
 
       <Input
-        label="From"
+        label={t("filters.fromLabel")}
         type="date"
         className="min-w-[140px]"
         {...register("start_date")}
       />
 
       <Input
-        label="To"
+        label={t("filters.toLabel")}
         type="date"
         className="min-w-[140px]"
         {...register("end_date")}
       />
 
       <div className="flex items-end gap-2">
-        <Button type="submit" size="sm">
-          Apply
+        <Button type="submit" size="sm" data-testid="apply-filters-button">
+          {t("filters.apply")}
         </Button>
-        <Button type="button" variant="outline" size="sm" onClick={handleReset}>
-          Reset
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleReset}
+          data-testid="reset-filters-button"
+        >
+          {t("filters.reset")}
         </Button>
       </div>
     </form>

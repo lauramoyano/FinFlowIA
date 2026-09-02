@@ -11,84 +11,43 @@ import {
   Wallet,
 } from "lucide-react";
 
+/**
+ * Structural data only — no display copy here. Titles/descriptions live in
+ * the "landing" i18n namespace (src/shared/i18n/locales/{es,en}/landing.json),
+ * keyed by the stable `id` below, so switching language never requires
+ * touching this file. See the components in this folder for
+ * `t(`features.items.${id}.title`)`-style lookups.
+ */
+
 export interface Feature {
+  id: string;
   icon: LucideIcon;
-  title: string;
-  description: string;
 }
 
 export const FEATURES: Feature[] = [
-  {
-    icon: Sparkles,
-    title: "Categorización automática con IA",
-    description:
-      "Cada movimiento se analiza y clasifica solo, con un motor de IA entrenado para el lenguaje de los pequeños negocios. Vos revisás, no tipeás.",
-  },
-  {
-    icon: BarChart3,
-    title: "Dashboard en tiempo real",
-    description:
-      "Ingresos, gastos y balance del mes de un vistazo, con el detalle por categoría siempre actualizado apenas cargás un movimiento.",
-  },
-  {
-    icon: FileDown,
-    title: "Reportes exportables",
-    description:
-      "Generá reportes en CSV o PDF listos para compartir con tu contador o tu equipo, filtrados por el período que necesites.",
-  },
-  {
-    icon: Layers,
-    title: "Categorías a tu medida",
-    description:
-      "Empezá con las categorías predefinidas y sumá las propias cuando tu negocio lo necesite — vos decidís cómo se organizan tus finanzas.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Seguridad de nivel bancario",
-    description:
-      "Autenticación con JWT, contraseñas con hashing bcrypt y comunicación cifrada. Tus datos financieros, protegidos en cada paso.",
-  },
-  {
-    icon: Smartphone,
-    title: "Donde estés, como quieras",
-    description:
-      "Una interfaz responsive pensada para que cargues un gasto desde el celular en el momento, y revises los números desde la computadora.",
-  },
+  { id: "ai-categorization", icon: Sparkles },
+  { id: "realtime-dashboard", icon: BarChart3 },
+  { id: "exportable-reports", icon: FileDown },
+  { id: "custom-categories", icon: Layers },
+  { id: "bank-grade-security", icon: ShieldCheck },
+  { id: "responsive-anywhere", icon: Smartphone },
 ];
 
 export interface Step {
+  id: string;
   icon: LucideIcon;
-  title: string;
-  description: string;
 }
 
 export const STEPS: Step[] = [
-  {
-    icon: UserPlus,
-    title: "Creá tu cuenta",
-    description: "Registrate en menos de un minuto. Sin tarjeta, sin vueltas.",
-  },
-  {
-    icon: Wallet,
-    title: "Cargá tus movimientos",
-    description: "Registrá cada ingreso y gasto con una descripción y un monto.",
-  },
-  {
-    icon: Sparkles,
-    title: "Dejá que la IA categorice",
-    description: "En segundos, cada transacción queda clasificada automáticamente.",
-  },
-  {
-    icon: BarChart3,
-    title: "Mirá tu negocio con claridad",
-    description: "Dashboard y reportes siempre al día, sin planillas manuales.",
-  },
+  { id: "create-account", icon: UserPlus },
+  { id: "log-transactions", icon: Wallet },
+  { id: "ai-categorizes", icon: Sparkles },
+  { id: "clear-dashboard", icon: BarChart3 },
 ];
 
 export interface TrustIndicator {
+  id: string;
   icon: LucideIcon;
-  title: string;
-  description: string;
 }
 
 /**
@@ -98,79 +57,38 @@ export interface TrustIndicator {
  * testimonios reales cuando existan.
  */
 export const TRUST_INDICATORS: TrustIndicator[] = [
-  {
-    icon: Sparkles,
-    title: "Impulsado por Claude (Anthropic)",
-    description: "La misma familia de modelos de IA usada por miles de empresas.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Cifrado extremo a extremo",
-    description: "Tus credenciales y movimientos viajan siempre cifrados.",
-  },
-  {
-    icon: BadgeCheck,
-    title: "Pensado para pequeños negocios",
-    description: "Diseñado desde cero para quienes llevan sus cuentas solos.",
-  },
+  { id: "powered-by-claude", icon: Sparkles },
+  { id: "end-to-end-encryption", icon: ShieldCheck },
+  { id: "built-for-small-business", icon: BadgeCheck },
 ];
 
-export interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-export const FAQ_ITEMS: FAQItem[] = [
-  {
-    question: "¿Necesito tarjeta de crédito para empezar?",
-    answer:
-      "No. Podés crear tu cuenta y empezar a cargar movimientos sin ingresar ningún medio de pago.",
-  },
-  {
-    question: "¿Cómo funciona la categorización con inteligencia artificial?",
-    answer:
-      "Cuando cargás una transacción sin elegir una categoría, el sistema envía la descripción y el monto a un modelo de lenguaje que la clasifica automáticamente en la categoría más adecuada, con un nivel de confianza asociado.",
-  },
-  {
-    question: "¿Mis datos financieros están seguros?",
-    answer:
-      "Sí. Las contraseñas se guardan con hashing bcrypt, la sesión se maneja con JWT de corta duración y toda la comunicación con el servidor va cifrada.",
-  },
-  {
-    question: "¿Puedo exportar mis reportes?",
-    answer:
-      "Sí, podés generar reportes filtrados por período y exportarlos en CSV o PDF para compartirlos con tu contador o tu equipo.",
-  },
-  {
-    question: "¿Sirve para cualquier tipo de negocio?",
-    answer:
-      "FinFlowIA está pensado para pequeños negocios y profesionales independientes. Las categorías predefinidas cubren los casos más comunes, y podés sumar las tuyas propias si tu negocio lo necesita.",
-  },
-  {
-    question: "¿Puedo usarlo desde el celular?",
-    answer:
-      "Sí, la aplicación es completamente responsive: podés cargar un gasto apenas lo hacés y revisar tu dashboard desde cualquier dispositivo.",
-  },
-];
+export const FAQ_IDS = [
+  "credit-card",
+  "how-ai-works",
+  "data-security",
+  "export-reports",
+  "any-business",
+  "mobile-usage",
+] as const;
 
 export const NAV_LINKS = [
-  { label: "Características", href: "#features" },
-  { label: "Cómo funciona", href: "#how-it-works" },
-  { label: "Preguntas frecuentes", href: "#faq" },
+  { id: "features", href: "#features" },
+  { id: "howItWorks", href: "#how-it-works" },
+  { id: "faq", href: "#faq" },
 ] as const;
 
 export const FOOTER_LINKS = {
-  producto: [
-    { label: "Características", href: "#features" },
-    { label: "Cómo funciona", href: "#how-it-works" },
-    { label: "Preguntas frecuentes", href: "#faq" },
+  product: [
+    { id: "features", href: "#features" },
+    { id: "howItWorks", href: "#how-it-works" },
+    { id: "faq", href: "#faq" },
   ],
-  cuenta: [
-    { label: "Iniciar sesión", href: "/login" },
-    { label: "Crear cuenta", href: "/register" },
+  account: [
+    { id: "login", href: "/login" },
+    { id: "createAccount", href: "/register" },
   ],
   legal: [
-    { label: "Privacidad", href: "#" },
-    { label: "Términos de servicio", href: "#" },
+    { id: "privacy", href: "#" },
+    { id: "terms", href: "#" },
   ],
 } as const;

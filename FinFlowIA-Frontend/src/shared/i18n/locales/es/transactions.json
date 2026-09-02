@@ -1,0 +1,89 @@
+{
+  "page": {
+    "title": "Transacciones",
+    "totalCount_one": "{{count}} transacción en total",
+    "totalCount_other": "{{count}} transacciones en total",
+    "addTransaction": "+ Agregar transacción",
+    "newTransaction": "Nueva transacción",
+    "pageOf": "Página {{page}} de {{totalPages}}"
+  },
+  "list": {
+    "columns": {
+      "date": "Fecha",
+      "description": "Descripción",
+      "category": "Categoría",
+      "type": "Tipo",
+      "amount": "Monto",
+      "actions": "Acciones"
+    },
+    "income": "Ingreso",
+    "expense": "Gasto",
+    "delete": "Eliminar",
+    "emptyTitle": "Todavía no hay transacciones",
+    "emptySubtitle": "Agregá tu primera transacción para empezar"
+  },
+  "form": {
+    "createError": "No se pudo crear la transacción. Intentá de nuevo.",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Ej. Almuerzo con cliente",
+    "amountLabel": "Monto",
+    "typeLabel": "Tipo",
+    "dateLabel": "Fecha",
+    "categoryLabel": "Categoría (opcional — la IA la sugiere)",
+    "categoryAiOption": "Dejar que la IA categorice",
+    "notesLabel": "Notas (opcional)",
+    "notesPlaceholder": "Contexto adicional...",
+    "submit": "Agregar transacción",
+    "validation": {
+      "descriptionRequired": "La descripción es obligatoria",
+      "descriptionTooLong": "La descripción es demasiado larga",
+      "amountRequired": "El monto es obligatorio",
+      "amountMustBePositive": "El monto debe ser un número positivo",
+      "typeRequired": "El tipo de transacción es obligatorio",
+      "dateRequired": "La fecha es obligatoria",
+      "dateFormat": "La fecha debe tener el formato AAAA-MM-DD",
+      "notesTooLong": "Las notas son demasiado largas",
+      "categoryTooLong": "El nombre de la categoría es demasiado largo"
+    }
+  },
+  "filters": {
+    "typeLabel": "Tipo",
+    "allTypes": "Todos los tipos",
+    "categoryLabel": "Categoría",
+    "allCategories": "Todas las categorías",
+    "fromLabel": "Desde",
+    "toLabel": "Hasta",
+    "apply": "Aplicar",
+    "reset": "Limpiar"
+  },
+  "categories": {
+    "food": "Alimentos",
+    "transport": "Transporte",
+    "utilities": "Servicios públicos",
+    "supplies": "Insumos",
+    "marketing": "Marketing",
+    "payroll": "Nómina",
+    "rent": "Alquiler",
+    "equipment": "Equipamiento",
+    "sales": "Ventas",
+    "services": "Servicios profesionales",
+    "other": "Otro",
+    "uncategorized": "Sin categorizar"
+  },
+  "manager": {
+    "manageButton": "Gestionar categorías",
+    "title": "Gestionar categorías",
+    "subtitle": "Creá categorías propias o eliminá las que ya no uses",
+    "empty": "No hay categorías todavía",
+    "default": "Predeterminada",
+    "newCategoryLabel": "Nueva categoría",
+    "newCategoryPlaceholder": "Ej. Suscripciones software",
+    "addCategory": "Agregar categoría",
+    "createError": "No se pudo crear la categoría. Intentá de nuevo.",
+    "validation": {
+      "nameRequired": "El nombre es obligatorio",
+      "nameTooLong": "El nombre es demasiado largo",
+      "typeRequired": "El tipo es obligatorio"
+    }
+  }
+}

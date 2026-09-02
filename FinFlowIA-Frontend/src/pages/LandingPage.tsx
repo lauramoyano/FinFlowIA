@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { LandingNavbar } from "@/features/landing/components/LandingNavbar";
 import { HeroSection } from "@/features/landing/components/HeroSection";
@@ -11,6 +12,7 @@ import { LandingFooter } from "@/features/landing/components/LandingFooter";
 
 export function LandingPage() {
   const token = useAuthStore((state) => state.token);
+  const { t } = useTranslation("landing");
 
   // Skip the marketing page for users who are already signed in.
   if (token) {
@@ -20,7 +22,7 @@ export function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <a href="#main-content" className="skip-link">
-        Saltar al contenido principal
+        {t("skipToContent")}
       </a>
       <LandingNavbar />
       <main id="main-content" className="flex-1">

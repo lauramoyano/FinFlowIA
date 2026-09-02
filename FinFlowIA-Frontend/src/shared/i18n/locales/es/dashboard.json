@@ -1,0 +1,21 @@
+{
+  "title": "Panel",
+  "overviewFor": "Resumen de {{period}}",
+  "loadError": "No se pudieron cargar los datos del panel. Intentá de nuevo.",
+  "summary": {
+    "totalIncome": "Ingresos totales",
+    "totalExpenses": "Gastos totales",
+    "netBalance": "Balance neto"
+  },
+  "charts": {
+    "expenseBreakdown": "Desglose de gastos",
+    "noExpenseData": "No hay datos de gastos para este período",
+    "incomeSources": "Fuentes de ingreso",
+    "noIncomeData": "No hay datos de ingresos para este período",
+    "categoryBreakdown": "Desglose por categoría",
+    "noData": "No hay datos disponibles",
+    "transactionCount_one": "{{count}} transacción",
+    "transactionCount_other": "{{count}} transacciones",
+    "amount": "Monto"
+  }
+}

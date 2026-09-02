@@ -1,6 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { RegisterForm } from "@/features/auth/components/RegisterForm";
 
 export function RegisterPage() {
+  const { t } = useTranslation("auth");
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
@@ -10,7 +13,7 @@ export function RegisterPage() {
           </div>
           <h1 className="text-3xl font-bold">FinFlowIA</h1>
           <p className="mt-1 text-muted-foreground">
-            Start your free financial management journey
+            {t("register.pageSubtitle")}
           </p>
         </div>
         <RegisterForm />

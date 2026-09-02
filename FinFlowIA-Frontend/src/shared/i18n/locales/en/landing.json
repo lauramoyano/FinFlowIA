@@ -1,0 +1,157 @@
+{
+  "skipToContent": "Skip to main content",
+  "nav": {
+    "ariaLabel": "Main",
+    "ariaLabelMobile": "Main (mobile)",
+    "features": "Features",
+    "howItWorks": "How it works",
+    "faq": "FAQ",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "goToDashboard": "Go to dashboard",
+    "login": "Log in",
+    "getStarted": "Get started free"
+  },
+  "hero": {
+    "badge": "Automatic AI categorization",
+    "titleLine1": "Your business finances,",
+    "titleHighlight": "on autopilot",
+    "subtitle": "Log your income and expenses, let AI categorize them for you, and watch how your business is doing on a dashboard that's always up to date.",
+    "ctaPrimary": "Get started free",
+    "ctaSecondary": "See how it works",
+    "noCreditCard": "No credit card required · Set up in minutes",
+    "preview": {
+      "balanceLabel": "July balance",
+      "balanceValue": "$284,500",
+      "changeLabel": "+12.4%",
+      "incomeLabel": "Income",
+      "incomeValue": "$412,000",
+      "expensesLabel": "Expenses",
+      "expensesValue": "$127,500",
+      "aiTag": "Categorized by AI",
+      "aiExample": "🍔 Food · 96%"
+    }
+  },
+  "trust": {
+    "heading": "Why trust FinFlowIA",
+    "items": {
+      "powered-by-claude": {
+        "title": "Powered by Claude (Anthropic)",
+        "description": "The same family of AI models used by thousands of companies."
+      },
+      "end-to-end-encryption": {
+        "title": "End-to-end encryption",
+        "description": "Your credentials and transactions always travel encrypted."
+      },
+      "built-for-small-business": {
+        "title": "Built for small businesses",
+        "description": "Designed from the ground up for people who manage their own books."
+      }
+    }
+  },
+  "features": {
+    "heading": "Everything you need to keep your finances on track",
+    "subtitle": "FinFlowIA combines artificial intelligence with a simple interface so managing your business's money stops being a burden.",
+    "items": {
+      "ai-categorization": {
+        "title": "Automatic AI categorization",
+        "description": "Every transaction is analyzed and classified on its own, with an AI engine trained on small-business language. You review, you don't type."
+      },
+      "realtime-dashboard": {
+        "title": "Real-time dashboard",
+        "description": "Income, expenses, and monthly balance at a glance, with the category breakdown always up to date the moment you log a transaction."
+      },
+      "exportable-reports": {
+        "title": "Exportable reports",
+        "description": "Generate CSV or PDF reports ready to share with your accountant or team, filtered by the period you need."
+      },
+      "custom-categories": {
+        "title": "Categories that fit your business",
+        "description": "Start with the built-in categories and add your own whenever your business needs them — you decide how your finances are organized."
+      },
+      "bank-grade-security": {
+        "title": "Bank-grade security",
+        "description": "JWT authentication, bcrypt password hashing, and encrypted communication. Your financial data, protected at every step."
+      },
+      "responsive-anywhere": {
+        "title": "Wherever you are, however you like",
+        "description": "A responsive interface designed so you can log an expense from your phone on the spot, and review the numbers from your computer."
+      }
+    }
+  },
+  "howItWorks": {
+    "heading": "Get started in four steps",
+    "subtitle": "No learning curve: from creating your account to your first report takes minutes.",
+    "items": {
+      "create-account": {
+        "title": "Create your account",
+        "description": "Sign up in under a minute. No card, no hassle."
+      },
+      "log-transactions": {
+        "title": "Log your transactions",
+        "description": "Record every income and expense with a description and an amount."
+      },
+      "ai-categorizes": {
+        "title": "Let AI categorize",
+        "description": "In seconds, every transaction is automatically classified."
+      },
+      "clear-dashboard": {
+        "title": "See your business clearly",
+        "description": "Dashboard and reports always up to date, no manual spreadsheets."
+      }
+    }
+  },
+  "faq": {
+    "heading": "Frequently asked questions",
+    "subtitle": "Can't find what you're looking for? Write to us and we'll answer.",
+    "items": {
+      "credit-card": {
+        "question": "Do I need a credit card to get started?",
+        "answer": "No. You can create your account and start logging transactions without entering any payment method."
+      },
+      "how-ai-works": {
+        "question": "How does AI categorization work?",
+        "answer": "When you log a transaction without picking a category, the system sends the description and amount to a language model that automatically classifies it into the most suitable category, along with a confidence score."
+      },
+      "data-security": {
+        "question": "Is my financial data safe?",
+        "answer": "Yes. Passwords are stored with bcrypt hashing, sessions use short-lived JWTs, and all communication with the server is encrypted."
+      },
+      "export-reports": {
+        "question": "Can I export my reports?",
+        "answer": "Yes, you can generate reports filtered by period and export them as CSV or PDF to share with your accountant or team."
+      },
+      "any-business": {
+        "question": "Does it work for any type of business?",
+        "answer": "FinFlowIA is built for small businesses and independent professionals. The built-in categories cover the most common cases, and you can add your own if your business needs them."
+      },
+      "mobile-usage": {
+        "question": "Can I use it from my phone?",
+        "answer": "Yes, the app is fully responsive: you can log an expense the moment it happens and check your dashboard from any device."
+      }
+    }
+  },
+  "cta": {
+    "heading": "Start organizing your finances today",
+    "subtitle": "Create your free account and let AI take care of categorizing every transaction in your business.",
+    "button": "Get started free"
+  },
+  "footer": {
+    "tagline": "Smart financial management for small businesses.",
+    "columns": {
+      "product": "Product",
+      "account": "Account",
+      "legal": "Legal"
+    },
+    "links": {
+      "features": "Features",
+      "howItWorks": "How it works",
+      "faq": "FAQ",
+      "login": "Log in",
+      "createAccount": "Create account",
+      "privacy": "Privacy",
+      "terms": "Terms of service"
+    },
+    "rights": "All rights reserved."
+  }
+}

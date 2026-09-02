@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/components/ui/Button";
 import { Input } from "@/shared/components/ui/Input";
 import { useExportReport } from "@/features/reports/hooks/useReports";
@@ -12,6 +13,7 @@ export function ReportGenerator({ onGenerate }: ReportGeneratorProps) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const exportMutation = useExportReport();
+  const { t } = useTranslation("reports");
 
   const handleGenerate = () => {
     if (startDate && endDate) {
@@ -27,17 +29,17 @@ export function ReportGenerator({ onGenerate }: ReportGeneratorProps) {
 
   return (
     <div className="rounded-lg border bg-card p-6">
-      <h2 className="mb-4 text-lg font-semibold">Generate Report</h2>
+      <h2 className="mb-4 text-lg font-semibold">{t("generator.title")}</h2>
       <div className="flex flex-wrap gap-4">
         <Input
-          label="Start Date"
+          label={t("generator.startDate")}
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
           className="min-w-[160px]"
         />
         <Input
-          label="End Date"
+          label={t("generator.endDate")}
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
@@ -45,21 +47,21 @@ export function ReportGenerator({ onGenerate }: ReportGeneratorProps) {
         />
         <div className="flex items-end gap-2">
           <Button onClick={handleGenerate} disabled={!startDate || !endDate}>
-            Generate
+            {t("generator.generate")}
           </Button>
           <Button
             variant="outline"
             onClick={() => handleExport("csv")}
             disabled={!startDate || !endDate || exportMutation.isPending}
           >
-            Export CSV
+            {t("generator.exportCsv")}
           </Button>
           <Button
             variant="outline"
             onClick={() => handleExport("pdf")}
             disabled={!startDate || !endDate || exportMutation.isPending}
           >
-            Export PDF
+            {t("generator.exportPdf")}
           </Button>
         </div>
       </div>

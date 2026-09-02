@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/Card";
 import { LoadingSpinner } from "@/shared/components/LoadingSpinner";
 import { CategoryBadge } from "@/features/transactions/components/CategoryBadge";
@@ -11,6 +12,8 @@ interface ReportPreviewProps {
 }
 
 export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
+  const { t, i18n } = useTranslation("reports");
+
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -22,7 +25,7 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
   if (!report) {
     return (
       <div className="flex h-64 flex-col items-center justify-center text-muted-foreground">
-        <p>Select a date range and click Generate to see your report</p>
+        <p>{t("preview.emptyState")}</p>
       </div>
     );
   }
@@ -33,10 +36,10 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">Total Income</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">{t("preview.totalIncome")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
               {formatCurrency(report.total_income)}
             </p>
           </CardContent>
@@ -44,10 +47,10 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">Total Expenses</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">{t("preview.totalExpenses")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-red-600">
+            <p className="text-2xl font-bold text-red-600 dark:text-red-400">
               {formatCurrency(report.total_expenses)}
             </p>
           </CardContent>
@@ -55,10 +58,10 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">Net Balance</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">{t("preview.netBalance")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className={`text-2xl font-bold ${parseFloat(report.net_balance) >= 0 ? "text-green-600" : "text-red-600"}`}>
+            <p className={`text-2xl font-bold ${parseFloat(report.net_balance) >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
               {formatCurrency(report.net_balance)}
             </p>
           </CardContent>
@@ -69,17 +72,20 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
       <Card>
         <CardHeader>
           <CardTitle>
-            Category Breakdown — {formatDate(report.start_date)} to {formatDate(report.end_date)}
+            {t("preview.categoryBreakdownFor", {
+              start: formatDate(report.start_date),
+              end: formatDate(report.end_date),
+            })}
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <table className="w-full text-sm">
+        <CardContent className="overflow-x-auto">
+          <table className="w-full min-w-[480px] text-sm">
             <thead>
               <tr className="border-b">
-                <th className="pb-2 text-left font-medium text-muted-foreground">Category</th>
-                <th className="pb-2 text-right font-medium text-muted-foreground">Transactions</th>
-                <th className="pb-2 text-right font-medium text-muted-foreground">Total</th>
-                <th className="pb-2 text-right font-medium text-muted-foreground">Share</th>
+                <th className="pb-2 text-left font-medium text-muted-foreground">{t("preview.columns.category")}</th>
+                <th className="pb-2 text-right font-medium text-muted-foreground">{t("preview.columns.transactions")}</th>
+                <th className="pb-2 text-right font-medium text-muted-foreground">{t("preview.columns.total")}</th>
+                <th className="pb-2 text-right font-medium text-muted-foreground">{t("preview.columns.share")}</th>
               </tr>
             </thead>
             <tbody>
@@ -99,7 +105,9 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
       </Card>
 
       <p className="text-xs text-muted-foreground text-right">
-        Generated at {new Date(report.generated_at).toLocaleString()}
+        {t("preview.generatedAt", {
+          date: new Date(report.generated_at).toLocaleString(i18n.language === "en" ? "en-US" : "es-AR"),
+        })}
       </p>
     </div>
   );

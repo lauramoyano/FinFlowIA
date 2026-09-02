@@ -1,6 +1,11 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
-import { ProtectedRoute } from "@/shared/components/ProtectedRoute";
+// NOTE: ProtectedRoute is intentionally NOT applied below yet.
+// Per project decision, login/auth gating is being implemented last so the
+// rest of the frontend can be built and navigated freely in the meantime.
+// TODO(auth-final-phase): re-wrap the routes under `element: <ProtectedRoute />`
+// (see git history / ProtectedRoute.tsx, which is fully implemented and ready)
+// once login is the last remaining piece to wire up.
 import { LoginPage } from "@/pages/LoginPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { TransactionsPage } from "@/pages/TransactionsPage";
@@ -27,26 +32,21 @@ export const router = createBrowserRouter([
     },
   },
 
-  // Protected routes
+  // App routes (temporarily open — see TODO above re: ProtectedRoute)
   {
-    element: <ProtectedRoute />,
+    element: <AppLayout />,
     children: [
       {
-        element: <AppLayout />,
-        children: [
-          {
-            path: "dashboard",
-            element: <DashboardPage />,
-          },
-          {
-            path: "transactions",
-            element: <TransactionsPage />,
-          },
-          {
-            path: "reports",
-            element: <ReportsPage />,
-          },
-        ],
+        path: "dashboard",
+        element: <DashboardPage />,
+      },
+      {
+        path: "transactions",
+        element: <TransactionsPage />,
+      },
+      {
+        path: "reports",
+        element: <ReportsPage />,
       },
     ],
   },

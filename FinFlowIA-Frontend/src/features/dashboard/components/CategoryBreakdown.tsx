@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/Card";
 import { CategoryBadge } from "@/features/transactions/components/CategoryBadge";
 import { formatCurrency } from "@/shared/lib/utils";
@@ -9,6 +10,7 @@ interface CategoryBreakdownProps {
 }
 
 export function CategoryBreakdownList({ categories }: CategoryBreakdownProps) {
+  const { t } = useTranslation("dashboard");
   const sorted = [...categories].sort(
     (a, b) => parseFloat(b.total) - parseFloat(a.total),
   );
@@ -16,11 +18,11 @@ export function CategoryBreakdownList({ categories }: CategoryBreakdownProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Category Breakdown</CardTitle>
+        <CardTitle>{t("charts.categoryBreakdown")}</CardTitle>
       </CardHeader>
       <CardContent>
         {sorted.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">No data available</p>
+          <p className="text-center text-muted-foreground py-8">{t("charts.noData")}</p>
         ) : (
           <div className="space-y-3">
             {sorted.map((cat) => (
@@ -28,7 +30,9 @@ export function CategoryBreakdownList({ categories }: CategoryBreakdownProps) {
                 <CategoryBadge category={cat.category as CategoryType} />
                 <div className="flex-1">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{cat.count} transactions</span>
+                    <span className="text-muted-foreground">
+                      {t("charts.transactionCount", { count: cat.count })}
+                    </span>
                     <span className="font-medium">{formatCurrency(cat.total)}</span>
                   </div>
                   <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">

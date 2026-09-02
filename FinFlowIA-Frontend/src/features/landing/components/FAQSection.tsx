@@ -1,25 +1,28 @@
+import { useTranslation } from "react-i18next";
 import { Reveal } from "@/shared/components/Reveal";
 import { Accordion, AccordionItem } from "@/shared/components/ui/Accordion";
-import { FAQ_ITEMS } from "@/features/landing/data/landing-content";
+import { FAQ_IDS } from "@/features/landing/data/landing-content";
 
 export function FAQSection() {
+  const { t } = useTranslation("landing");
+
   return (
     <section id="faq" aria-labelledby="faq-heading" className="border-t border-border py-20 sm:py-28">
       <div className="container max-w-3xl">
         <Reveal className="text-center">
           <h2 id="faq-heading" className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Preguntas frecuentes
+            {t("faq.heading")}
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            ¿No encontrás lo que buscás? Escribinos y te respondemos.
+            {t("faq.subtitle")}
           </p>
         </Reveal>
 
         <Reveal delay={100} className="mt-12">
-          <Accordion defaultValue={FAQ_ITEMS[0]?.question}>
-            {FAQ_ITEMS.map((item) => (
-              <AccordionItem key={item.question} value={item.question} question={item.question}>
-                {item.answer}
+          <Accordion defaultValue={FAQ_IDS[0]}>
+            {FAQ_IDS.map((id) => (
+              <AccordionItem key={id} value={id} question={t(`faq.items.${id}.question`)}>
+                {t(`faq.items.${id}.answer`)}
               </AccordionItem>
             ))}
           </Accordion>

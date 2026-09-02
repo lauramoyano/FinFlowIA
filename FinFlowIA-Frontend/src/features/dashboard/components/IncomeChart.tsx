@@ -7,6 +7,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/Card";
 import { formatCurrency } from "@/shared/lib/utils";
 import type { CategoryBreakdown } from "@/features/dashboard/api/dashboard.api";
@@ -16,10 +17,13 @@ interface IncomeChartProps {
 }
 
 export function IncomeChart({ incomeCategories }: IncomeChartProps) {
+  const { t, i18n } = useTranslation("dashboard");
+  const { t: tTransactions } = useTranslation("transactions");
+
   const chartData = incomeCategories
     .filter((cat) => parseFloat(cat.total) > 0)
     .map((cat) => ({
-      name: cat.category.charAt(0).toUpperCase() + cat.category.slice(1),
+      name: tTransactions(`categories.${cat.category}`),
       amount: parseFloat(cat.total),
     }));
 
@@ -27,10 +31,10 @@ export function IncomeChart({ incomeCategories }: IncomeChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Income Sources</CardTitle>
+          <CardTitle>{t("charts.incomeSources")}</CardTitle>
         </CardHeader>
         <CardContent className="flex h-48 items-center justify-center text-muted-foreground">
-          No income data for this period
+          {t("charts.noIncomeData")}
         </CardContent>
       </Card>
     );
@@ -39,7 +43,7 @@ export function IncomeChart({ incomeCategories }: IncomeChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Income Sources</CardTitle>
+        <CardTitle>{t("charts.incomeSources")}</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={280}>
@@ -49,13 +53,13 @@ export function IncomeChart({ incomeCategories }: IncomeChartProps) {
             <YAxis
               className="text-xs"
               tickFormatter={(value: number) =>
-                new Intl.NumberFormat("es-AR", {
+                new Intl.NumberFormat(i18n.language === "en" ? "en-US" : "es-AR", {
                   notation: "compact",
                   compactDisplay: "short",
                 }).format(value)
               }
             />
-            <Tooltip formatter={(value: number) => [formatCurrency(value), "Amount"]} />
+            <Tooltip formatter={(value: number) => [formatCurrency(value), t("charts.amount")]} />
             <Bar dataKey="amount" fill="#10b981" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>

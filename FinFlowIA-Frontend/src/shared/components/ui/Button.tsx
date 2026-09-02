@@ -1,5 +1,6 @@
 import { type ButtonHTMLAttributes, forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib/utils";
 
 const buttonVariants = cva(
@@ -36,6 +37,7 @@ export interface ButtonProps
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, isLoading = false, children, disabled, ...props }, ref) => {
+    const { t } = useTranslation("common");
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}
@@ -65,7 +67,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
               />
             </svg>
-            Loading...
+            {t("loading")}
           </span>
         ) : (
           children

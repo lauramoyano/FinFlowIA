@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Reveal } from "@/shared/components/Reveal";
 import { buttonVariants } from "@/shared/components/ui/Button";
 import { cn } from "@/shared/lib/utils";
 
 export function CTASection() {
+  const { t } = useTranslation("landing");
+
   return (
     <section className="py-20 sm:py-28">
       <div className="container">
@@ -14,11 +17,10 @@ export function CTASection() {
             <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
           </div>
           <h2 className="relative text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
-            Empezá a organizar tus finanzas hoy
+            {t("cta.heading")}
           </h2>
           <p className="relative mx-auto mt-4 max-w-xl text-lg text-primary-foreground/80">
-            Creá tu cuenta gratis y dejá que la IA se encargue de categorizar
-            cada movimiento de tu negocio.
+            {t("cta.subtitle")}
           </p>
           <Link
             to="/register"
@@ -27,7 +29,7 @@ export function CTASection() {
               "relative mt-8 gap-2 bg-white text-primary hover:bg-white/90",
             )}
           >
-            Comenzar gratis
+            {t("cta.button")}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </Reveal>

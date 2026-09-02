@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ReportGenerator } from "@/features/reports/components/ReportGenerator";
 import { ReportPreview } from "@/features/reports/components/ReportPreview";
 import { useReport } from "@/features/reports/hooks/useReports";
@@ -9,6 +10,7 @@ export function ReportsPage() {
     start_date: DateString;
     end_date: DateString;
   } | null>(null);
+  const { t } = useTranslation("reports");
 
   const { data, isLoading } = useReport({
     start_date: reportParams?.start_date ?? "",
@@ -19,9 +21,9 @@ export function ReportsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Reports</h1>
+        <h1 className="text-2xl font-bold">{t("page.title")}</h1>
         <p className="text-muted-foreground">
-          Generate and export financial reports
+          {t("page.subtitle")}
         </p>
       </div>
 

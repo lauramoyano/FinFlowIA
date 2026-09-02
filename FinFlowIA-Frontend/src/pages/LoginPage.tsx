@@ -1,6 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { LoginForm } from "@/features/auth/components/LoginForm";
 
 export function LoginPage() {
+  const { t } = useTranslation("auth");
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
@@ -10,7 +13,7 @@ export function LoginPage() {
           </div>
           <h1 className="text-3xl font-bold">FinFlowIA</h1>
           <p className="mt-1 text-muted-foreground">
-            AI-powered financial management
+            {t("login.pageSubtitle")}
           </p>
         </div>
         <LoginForm />

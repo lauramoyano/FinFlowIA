@@ -1,10 +1,14 @@
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
 import {
   createTransactionSchema,
   type CreateTransactionFormValues,
 } from "@/features/transactions/schemas/transaction.schema";
 import { useCreateTransaction } from "@/features/transactions/hooks/useCreateTransaction";
+import { useCategories } from "@/features/categories/hooks/useCategories";
+import { getCategoryLabel } from "@/features/transactions/lib/category-label";
 import { Button } from "@/shared/components/ui/Button";
 import { Input } from "@/shared/components/ui/Input";
 import type { Transaction } from "@/features/transactions/types/transaction.types";
@@ -16,19 +20,28 @@ interface TransactionFormProps {
 
 export function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
   const createMutation = useCreateTransaction();
+  const { t } = useTranslation("transactions");
+  const { t: tCommon } = useTranslation("common");
+  const transactionSchema = useMemo(() => createTransactionSchema(t), [t]);
 
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<CreateTransactionFormValues>({
-    resolver: zodResolver(createTransactionSchema),
+    resolver: zodResolver(transactionSchema),
     defaultValues: {
       transaction_date: new Date().toISOString().split("T")[0],
       transaction_type: "expense",
     },
   });
+
+  // Categories are scoped to income vs. expense, so refetch (cached by
+  // TanStack Query) whenever the user flips the type dropdown.
+  const selectedType = watch("transaction_type");
+  const { data: categories = [] } = useCategories(selectedType);
 
   const onSubmit = (data: CreateTransactionFormValues) => {
     createMutation.mutate(data, {
@@ -43,20 +56,20 @@ export function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {createMutation.isError && (
         <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-          Failed to create transaction. Please try again.
+          {t("form.createError")}
         </div>
       )}
 
       <Input
-        label="Description"
-        placeholder="e.g., Lunch with client"
+        label={t("form.descriptionLabel")}
+        placeholder={t("form.descriptionPlaceholder")}
         error={errors.description?.message}
         data-testid="description-input"
         {...register("description")}
       />
 
       <Input
-        label="Amount"
+        label={t("form.amountLabel")}
         type="number"
         step="0.01"
         min="0.01"
@@ -66,14 +79,14 @@ export function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
       />
 
       <div>
-        <label className="text-sm font-medium">Type</label>
+        <label className="text-sm font-medium">{t("form.typeLabel")}</label>
         <select
           {...register("transaction_type")}
           name="type"
           className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
         >
-          <option value="expense">Expense</option>
-          <option value="income">Income</option>
+          <option value="expense">{t("list.expense")}</option>
+          <option value="income">{t("list.income")}</option>
         </select>
         {errors.transaction_type && (
           <p className="text-sm text-destructive">{errors.transaction_type.message}</p>
@@ -81,47 +94,43 @@ export function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
       </div>
 
       <Input
-        label="Date"
+        label={t("form.dateLabel")}
         type="date"
         error={errors.transaction_date?.message}
         {...register("transaction_date")}
       />
 
       <div>
-        <label className="text-sm font-medium">Category (optional — AI will suggest)</label>
+        <label className="text-sm font-medium">{t("form.categoryLabel")}</label>
         <select
           {...register("category")}
           className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
         >
-          <option value="">Let AI categorize</option>
-          <option value="food">Food</option>
-          <option value="transport">Transport</option>
-          <option value="utilities">Utilities</option>
-          <option value="supplies">Supplies</option>
-          <option value="marketing">Marketing</option>
-          <option value="payroll">Payroll</option>
-          <option value="rent">Rent</option>
-          <option value="equipment">Equipment</option>
-          <option value="sales">Sales</option>
-          <option value="services">Services</option>
-          <option value="other">Other</option>
+          <option value="">{t("form.categoryAiOption")}</option>
+          {categories
+            .filter((category) => !category.is_default || category.name !== "uncategorized")
+            .map((category) => (
+              <option key={category.id} value={category.name}>
+                {getCategoryLabel(t, category.name)}
+              </option>
+            ))}
         </select>
       </div>
 
       <Input
-        label="Notes (optional)"
-        placeholder="Additional context..."
+        label={t("form.notesLabel")}
+        placeholder={t("form.notesPlaceholder")}
         error={errors.notes?.message}
         {...register("notes")}
       />
 
       <div className="flex gap-3 pt-2">
         <Button type="submit" isLoading={createMutation.isPending}>
-          Add Transaction
+          {t("form.submit")}
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
-            Cancel
+            {tCommon("actions.cancel")}
           </Button>
         )}
       </div>

@@ -1,9 +1,11 @@
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useLogin } from "@/features/auth/hooks/useAuth";
 import {
-  loginSchema,
+  createLoginSchema,
   type LoginFormValues,
 } from "@/features/auth/schemas/auth.schema";
 import { Button } from "@/shared/components/ui/Button";
@@ -19,6 +21,8 @@ import {
 
 export function LoginForm() {
   const loginMutation = useLogin();
+  const { t } = useTranslation("auth");
+  const loginSchema = useMemo(() => createLoginSchema(t), [t]);
 
   const {
     register,
@@ -35,22 +39,23 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">Welcome back</CardTitle>
-        <CardDescription>
-          Sign in to your FinFlowIA account
-        </CardDescription>
+        <CardTitle className="text-2xl">{t("login.title")}</CardTitle>
+        <CardDescription>{t("login.subtitle")}</CardDescription>
       </CardHeader>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           {loginMutation.isError && (
-            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-              Invalid email or password. Please try again.
+            <div
+              className="rounded-md bg-destructive/10 p-3 text-sm text-destructive"
+              data-testid="login-error"
+            >
+              {t("login.invalidCredentials")}
             </div>
           )}
 
           <Input
-            label="Email"
+            label={t("login.emailLabel")}
             type="email"
             placeholder="you@example.com"
             error={errors.email?.message}
@@ -58,7 +63,7 @@ export function LoginForm() {
           />
 
           <Input
-            label="Password"
+            label={t("login.passwordLabel")}
             type="password"
             placeholder="••••••••"
             error={errors.password?.message}
@@ -72,16 +77,16 @@ export function LoginForm() {
             className="w-full"
             isLoading={loginMutation.isPending}
           >
-            Sign In
+            {t("login.submit")}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            {t("login.noAccount")}{" "}
             <Link
               to="/register"
               className="text-primary underline-offset-4 hover:underline"
             >
-              Sign up
+              {t("login.signUp")}
             </Link>
           </p>
         </CardFooter>

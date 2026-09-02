@@ -6,12 +6,13 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/Card";
 import { formatCurrency } from "@/shared/lib/utils";
 import type { CategoryBreakdown } from "@/features/dashboard/api/dashboard.api";
 
 const COLORS = [
-  "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6",
+  "#8A05BE", "#10b981", "#f59e0b", "#ef4444", "#3b82f6",
   "#06b6d4", "#f97316", "#84cc16", "#ec4899", "#6366f1",
 ];
 
@@ -20,10 +21,13 @@ interface ExpenseChartProps {
 }
 
 export function ExpenseChart({ data }: ExpenseChartProps) {
+  const { t } = useTranslation("dashboard");
+  const { t: tTransactions } = useTranslation("transactions");
+
   const chartData = data
     .filter((cat) => parseFloat(cat.total) > 0)
     .map((cat) => ({
-      name: cat.category.charAt(0).toUpperCase() + cat.category.slice(1),
+      name: tTransactions(`categories.${cat.category}`),
       value: parseFloat(cat.total),
       percentage: cat.percentage,
     }));
@@ -32,10 +36,10 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Expense Breakdown</CardTitle>
+          <CardTitle>{t("charts.expenseBreakdown")}</CardTitle>
         </CardHeader>
         <CardContent className="flex h-48 items-center justify-center text-muted-foreground">
-          No expense data for this period
+          {t("charts.noExpenseData")}
         </CardContent>
       </Card>
     );
@@ -44,7 +48,7 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Expense Breakdown</CardTitle>
+        <CardTitle>{t("charts.expenseBreakdown")}</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={280}>
@@ -63,7 +67,7 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: number) => [formatCurrency(value), "Amount"]}
+              formatter={(value: number) => [formatCurrency(value), t("charts.amount")]}
             />
             <Legend />
           </PieChart>

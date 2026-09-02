@@ -1,9 +1,11 @@
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useRegister } from "@/features/auth/hooks/useAuth";
 import {
-  registerSchema,
+  createRegisterSchema,
   type RegisterFormValues,
 } from "@/features/auth/schemas/auth.schema";
 import { Button } from "@/shared/components/ui/Button";
@@ -19,6 +21,8 @@ import {
 
 export function RegisterForm() {
   const registerMutation = useRegister();
+  const { t } = useTranslation("auth");
+  const registerSchema = useMemo(() => createRegisterSchema(t), [t]);
 
   const {
     register,
@@ -35,36 +39,34 @@ export function RegisterForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">Create an account</CardTitle>
-        <CardDescription>
-          Start managing your business finances with AI
-        </CardDescription>
+        <CardTitle className="text-2xl">{t("register.title")}</CardTitle>
+        <CardDescription>{t("register.subtitle")}</CardDescription>
       </CardHeader>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           {registerMutation.isError && (
             <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-              Registration failed. The email may already be in use.
+              {t("register.failed")}
             </div>
           )}
 
           {registerMutation.isSuccess && (
-            <div className="rounded-md bg-green-50 p-3 text-sm text-green-700">
-              Account created! You can now sign in.
+            <div className="rounded-md bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+              {t("register.success")}
             </div>
           )}
 
           <Input
-            label="Full Name"
+            label={t("register.fullNameLabel")}
             type="text"
-            placeholder="Jane Doe"
+            placeholder={t("register.fullNamePlaceholder")}
             error={errors.full_name?.message}
             {...register("full_name")}
           />
 
           <Input
-            label="Email"
+            label={t("register.emailLabel")}
             type="email"
             placeholder="you@example.com"
             error={errors.email?.message}
@@ -72,17 +74,17 @@ export function RegisterForm() {
           />
 
           <Input
-            label="Password"
+            label={t("register.passwordLabel")}
             type="password"
-            placeholder="Minimum 8 characters"
+            placeholder={t("register.passwordPlaceholder")}
             error={errors.password?.message}
             {...register("password")}
           />
 
           <Input
-            label="Confirm Password"
+            label={t("register.confirmPasswordLabel")}
             type="password"
-            placeholder="Repeat your password"
+            placeholder={t("register.confirmPasswordPlaceholder")}
             error={errors.confirmPassword?.message}
             {...register("confirmPassword")}
           />
@@ -94,16 +96,16 @@ export function RegisterForm() {
             className="w-full"
             isLoading={registerMutation.isPending}
           >
-            Create Account
+            {t("register.submit")}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
+            {t("register.haveAccount")}{" "}
             <Link
               to="/login"
               className="text-primary underline-offset-4 hover:underline"
             >
-              Sign in
+              {t("register.signIn")}
             </Link>
           </p>
         </CardFooter>

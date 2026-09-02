@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useDashboard } from "@/features/dashboard/hooks/useDashboard";
 import { SummaryCards } from "@/features/dashboard/components/SummaryCards";
 import { ExpenseChart } from "@/features/dashboard/components/ExpenseChart";
@@ -7,6 +8,7 @@ import { LoadingSpinner } from "@/shared/components/LoadingSpinner";
 
 export function DashboardPage() {
   const { data, isLoading, error } = useDashboard();
+  const { t } = useTranslation("dashboard");
 
   if (isLoading) {
     return (
@@ -19,7 +21,7 @@ export function DashboardPage() {
   if (error || !data) {
     return (
       <div className="rounded-md bg-destructive/10 p-4 text-destructive">
-        Failed to load dashboard data. Please try again.
+        {t("loadError")}
       </div>
     );
   }
@@ -27,8 +29,8 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Overview for {data.period_label}</p>
+        <h1 className="text-2xl font-bold" data-testid="page-title">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("overviewFor", { period: data.period_label })}</p>
       </div>
 
       <SummaryCards

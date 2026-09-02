@@ -1,0 +1,28 @@
+{
+  "page": {
+    "title": "Reports",
+    "subtitle": "Generate and export financial reports"
+  },
+  "generator": {
+    "title": "Generate Report",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "generate": "Generate",
+    "exportCsv": "Export CSV",
+    "exportPdf": "Export PDF"
+  },
+  "preview": {
+    "emptyState": "Select a date range and click Generate to see your report",
+    "totalIncome": "Total Income",
+    "totalExpenses": "Total Expenses",
+    "netBalance": "Net Balance",
+    "categoryBreakdownFor": "Category Breakdown — {{start}} to {{end}}",
+    "columns": {
+      "category": "Category",
+      "transactions": "Transactions",
+      "total": "Total",
+      "share": "Share"
+    },
+    "generatedAt": "Generated at {{date}}"
+  }
+}

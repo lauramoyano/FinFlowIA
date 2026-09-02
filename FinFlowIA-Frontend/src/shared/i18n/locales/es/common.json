@@ -1,0 +1,27 @@
+{
+  "appName": "FinFlowIA",
+  "loading": "Cargando...",
+  "logout": "Cerrar sesión",
+  "openMenu": "Abrir menú",
+  "theme": {
+    "toggle": "Cambiar tema",
+    "switchToLight": "Cambiar a modo claro",
+    "switchToDark": "Cambiar a modo oscuro"
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "actions": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "close": "Cerrar",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "retry": "Reintentar"
+  },
+  "errors": {
+    "generic": "Ocurrió un error. Intentá de nuevo.",
+    "notFound": "No encontrado",
+    "boundaryTitle": "Algo salió mal"
+  }
+}

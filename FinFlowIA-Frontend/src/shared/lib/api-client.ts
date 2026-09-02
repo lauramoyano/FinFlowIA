@@ -23,13 +23,17 @@ apiClient.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error),
 );
 
-// Response interceptor: handle 401 by logging out and redirecting to login
+// Response interceptor: handle 401 by clearing any stale session.
+// NOTE: the hard redirect to /login is intentionally disabled while login
+// gating is deferred (see router/index.tsx TODO). Pages without a valid
+// session will just render their own loading/error state instead of being
+// bounced out. Restore `window.location.href = "/login"` here once auth
+// is wired up as the final phase.
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
-      window.location.href = "/login";
     }
     return Promise.reject(error);
   },

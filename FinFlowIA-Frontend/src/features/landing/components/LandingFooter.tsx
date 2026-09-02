@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { FOOTER_LINKS } from "@/features/landing/data/landing-content";
 
 export function LandingFooter() {
+  const { t } = useTranslation("landing");
+
   return (
     <footer className="border-t border-border bg-muted/30">
       <div className="container py-12">
@@ -15,7 +19,7 @@ export function LandingFooter() {
               <span>FinFlowIA</span>
             </Link>
             <p className="mt-3 text-sm text-muted-foreground">
-              Gestión financiera inteligente para pequeños negocios.
+              {t("footer.tagline")}
             </p>
             <a
               href="mailto:hola@finflowia.app"
@@ -26,13 +30,13 @@ export function LandingFooter() {
             </a>
           </div>
 
-          <FooterColumn title="Producto" links={FOOTER_LINKS.producto} />
-          <FooterColumn title="Cuenta" links={FOOTER_LINKS.cuenta} />
-          <FooterColumn title="Legal" links={FOOTER_LINKS.legal} />
+          <FooterColumn title={t("footer.columns.product")} links={FOOTER_LINKS.product} t={t} />
+          <FooterColumn title={t("footer.columns.account")} links={FOOTER_LINKS.account} t={t} />
+          <FooterColumn title={t("footer.columns.legal")} links={FOOTER_LINKS.legal} t={t} />
         </div>
 
         <div className="mt-12 border-t border-border pt-6 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} FinFlowIA. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} FinFlowIA. {t("footer.rights")}</p>
         </div>
       </div>
     </footer>
@@ -41,23 +45,24 @@ export function LandingFooter() {
 
 interface FooterColumnProps {
   title: string;
-  links: readonly { label: string; href: string }[];
+  links: readonly { id: string; href: string }[];
+  t: TFunction<"landing">;
 }
 
-function FooterColumn({ title, links }: FooterColumnProps) {
+function FooterColumn({ title, links, t }: FooterColumnProps) {
   return (
     <div>
       <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       <ul className="mt-4 space-y-3">
         {links.map((link) => (
-          <li key={link.label}>
+          <li key={link.id}>
             {link.href.startsWith("/") ? (
               <Link to={link.href} className="text-sm text-muted-foreground hover:text-foreground">
-                {link.label}
+                {t(`footer.links.${link.id}`)}
               </Link>
             ) : (
               <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground">
-                {link.label}
+                {t(`footer.links.${link.id}`)}
               </a>
             )}
           </li>

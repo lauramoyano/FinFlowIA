@@ -1,17 +1,20 @@
+import { useTranslation } from "react-i18next";
 import { Reveal } from "@/shared/components/Reveal";
 import { TRUST_INDICATORS } from "@/features/landing/data/landing-content";
 
 export function TrustSection() {
+  const { t } = useTranslation("landing");
+
   return (
     <section aria-labelledby="trust-heading" className="border-y border-border py-14">
       <div className="container">
         <h2 id="trust-heading" className="sr-only">
-          Por qué confiar en FinFlowIA
+          {t("trust.heading")}
         </h2>
         <div role="list" className="grid gap-8 sm:grid-cols-3">
           {TRUST_INDICATORS.map((item, index) => (
             <Reveal
-              key={item.title}
+              key={item.id}
               role="listitem"
               delay={index * 75}
               className="flex items-start gap-4"
@@ -20,8 +23,12 @@ export function TrustSection() {
                 <item.icon className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
-                <p className="font-semibold text-foreground">{item.title}</p>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
+                <p className="font-semibold text-foreground">
+                  {t(`trust.items.${item.id}.title`)}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {t(`trust.items.${item.id}.description`)}
+                </p>
               </div>
             </Reveal>
           ))}

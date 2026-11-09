@@ -11,12 +11,15 @@ export function useLogin() {
   return useMutation({
     mutationFn: async (data: LoginRequest) => {
       const tokenResponse = await authApi.login(data);
+      // Store the token before fetching the profile so the api-client
+      // interceptor has it available to attach as the Authorization header.
+      useAuthStore.setState({ token: tokenResponse.access_token });
       const user = await authApi.getMe();
       return { tokenResponse, user };
     },
     onSuccess: ({ tokenResponse, user }) => {
       setAuth(user, tokenResponse);
-      navigate("/dashboard");
+      navigate("/home");
     },
   });
 }

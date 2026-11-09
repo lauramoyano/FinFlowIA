@@ -37,6 +37,7 @@ export const reportsApi = {
     start_date: DateString;
     end_date: DateString;
     format: "csv" | "pdf";
+    lang: "es" | "en";
   }): Promise<Blob> => {
     const response = await apiClient.get("/reports/export", {
       params,

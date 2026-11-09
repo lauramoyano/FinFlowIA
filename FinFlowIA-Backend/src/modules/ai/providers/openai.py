@@ -8,13 +8,14 @@ logger = structlog.get_logger(__name__)
 class OpenAIProvider:
     """
     LLM provider implementation using the OpenAI API.
-    Used as a fallback when the primary Anthropic provider is unavailable.
+    Default primary provider (gpt-4o-mini) — cheapest option to get started
+    with. Set LLM_PROVIDER=anthropic in settings to use Claude Haiku instead.
     """
 
     def __init__(
         self,
         api_key: str,
-        model: str = "gpt-4o-mini",
+        model: str = "gpt-5-nano",
     ) -> None:
         self._api_key = api_key
         self._model = model
@@ -37,8 +38,10 @@ class OpenAIProvider:
             client = self._get_client()
             response = await client.chat.completions.create(
                 model=self._model,
-                max_tokens=max_tokens,
-                temperature=temperature,
+                # Newer models (e.g. gpt-5-nano) reject the legacy `max_tokens`
+                # param (needs `max_completion_tokens`) and only support the
+                # default temperature (1), not arbitrary values like 0.0.
+                max_completion_tokens=max_tokens,
                 messages=[{"role": "user", "content": prompt}],
             )
 

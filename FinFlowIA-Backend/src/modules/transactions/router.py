@@ -10,15 +10,18 @@ from src.config.settings import settings
 from src.infrastructure.cache.redis_client import get_redis
 from src.modules.ai.cache import LLMCache
 from src.modules.ai.providers.anthropic import AnthropicProvider
+from src.modules.ai.providers.base import LLMProvider
 from src.modules.ai.providers.openai import OpenAIProvider
 from src.modules.ai.service import AIService
 from src.modules.auth.dependencies import get_current_user
 from src.modules.auth.models import User
-from src.modules.transactions.categorizer import TransactionCategorizer
+from src.modules.transactions.categorizer import TransactionCategorizer, TransactionTextParser
 from src.modules.transactions.category_repository import CategoryRepository
 from src.modules.transactions.repository import TransactionRepository
 from src.modules.transactions.schemas import (
     CreateTransactionRequest,
+    ParsedTransactionResponse,
+    ParseTransactionTextRequest,
     TransactionResponse,
     UpdateTransactionRequest,
 )
@@ -34,17 +37,62 @@ def get_transaction_service(
 ) -> TransactionService:
     # These would normally be injected via a DI container
     repo = TransactionRepository(session)
-    fallback = (
-        OpenAIProvider(api_key=settings.openai_api_key) if settings.openai_api_key else None
-    )
+
+    # settings.llm_provider picks which one is primary; the other becomes the
+    # fallback only if it actually has a key configured (no point wiring a
+    # fallback that's just going to fail too).
+    primary: LLMProvider
+    fallback: LLMProvider | None
+    if settings.llm_provider == "openai":
+        primary = OpenAIProvider(api_key=settings.openai_api_key or "")
+        fallback = (
+            AnthropicProvider(api_key=settings.anthropic_api_key)
+            if settings.anthropic_api_key
+            else None
+        )
+    else:
+        primary = AnthropicProvider(api_key=settings.anthropic_api_key)
+        fallback = (
+            OpenAIProvider(api_key=settings.openai_api_key) if settings.openai_api_key else None
+        )
+
     ai_service = AIService(
-        primary=AnthropicProvider(api_key=settings.anthropic_api_key),
+        primary=primary,
         fallback=fallback,
         cache=LLMCache(redis_client=redis_client, ttl_seconds=settings.llm_cache_ttl_seconds),
     )
     categorizer = TransactionCategorizer(ai_service=ai_service)
     category_repo = CategoryRepository(session)
     return TransactionService(repo=repo, categorizer=categorizer, category_repo=category_repo)
+
+
+def get_transaction_text_parser(
+    redis_client: Redis | None = Depends(get_redis),
+) -> TransactionTextParser:
+    # Same provider primary/fallback wiring as get_transaction_service above —
+    # no DI container in this project, so this ~15-line block is duplicated
+    # rather than shared, matching the existing pattern.
+    primary: LLMProvider
+    fallback: LLMProvider | None
+    if settings.llm_provider == "openai":
+        primary = OpenAIProvider(api_key=settings.openai_api_key or "")
+        fallback = (
+            AnthropicProvider(api_key=settings.anthropic_api_key)
+            if settings.anthropic_api_key
+            else None
+        )
+    else:
+        primary = AnthropicProvider(api_key=settings.anthropic_api_key)
+        fallback = (
+            OpenAIProvider(api_key=settings.openai_api_key) if settings.openai_api_key else None
+        )
+
+    ai_service = AIService(
+        primary=primary,
+        fallback=fallback,
+        cache=LLMCache(redis_client=redis_client, ttl_seconds=settings.llm_cache_ttl_seconds),
+    )
+    return TransactionTextParser(ai_service=ai_service)
 
 
 @router.post(
@@ -60,6 +108,30 @@ async def create_transaction(
 ) -> ApiResponse[TransactionResponse]:
     transaction = await service.create(data=request, user_id=current_user.id)
     return ApiResponse(data=transaction, message="Transaction created successfully")
+
+
+@router.post(
+    "/parse",
+    response_model=ApiResponse[ParsedTransactionResponse],
+    summary="Parse a free-text chat message into transaction fields (does not create it)",
+)
+async def parse_transaction_text(
+    request: ParseTransactionTextRequest,
+    current_user: User = Depends(get_current_user),
+    parser: TransactionTextParser = Depends(get_transaction_text_parser),
+) -> ApiResponse[ParsedTransactionResponse]:
+    result = await parser.parse(request.text)
+    return ApiResponse(
+        data=ParsedTransactionResponse(
+            description=result.description,
+            amount=result.amount,
+            transaction_type=result.transaction_type,
+            transaction_date=result.transaction_date,
+            category=result.category,
+            confidence=result.confidence,
+            error=result.error,
+        )
+    )
 
 
 @router.get(

@@ -1,0 +1,38 @@
+{
+  "page": {
+    "title": "Products",
+    "subtitle": "Register your products with their per-unit input cost and sale price — the chat uses them to estimate production costs and sales goals."
+  },
+  "list": {
+    "columns": {
+      "name": "Product",
+      "cost": "Cost per unit",
+      "salePrice": "Sale price"
+    },
+    "empty": "You haven't registered any products yet",
+    "noPrice": "No price",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "form": {
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g., Cake",
+    "unitLabelLabel": "Unit (optional)",
+    "unitLabelPlaceholder": "e.g., unit, kg",
+    "costLabel": "Input cost per unit",
+    "salePriceLabel": "Sale price per unit",
+    "submit": "Add product",
+    "createError": "Failed to create product. Please try again.",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameTooLong": "Name is too long",
+      "unitLabelTooLong": "Unit is too long",
+      "costRequired": "Cost is required",
+      "costMustBePositive": "Cost must be a positive number",
+      "salePriceRequired": "Sale price is required",
+      "salePriceMustBePositive": "Sale price must be a positive number"
+    }
+  }
+}

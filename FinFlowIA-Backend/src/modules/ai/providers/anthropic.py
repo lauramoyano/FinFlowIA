@@ -5,15 +5,17 @@ from src.modules.ai.providers.base import LLMProvider, LLMProviderError, LLMResp
 
 logger = structlog.get_logger(__name__)
 
-# Cost constants for claude-haiku-4-5-20251001
-COST_PER_INPUT_TOKEN = 0.00000025   # $0.25/M tokens
-COST_PER_OUTPUT_TOKEN = 0.00000125  # $1.25/M tokens
+# Cost constants for claude-haiku-4-5-20251001 ($1.00 / $5.00 per 1M tokens)
+COST_PER_INPUT_TOKEN = 0.000001    # $1.00/M tokens
+COST_PER_OUTPUT_TOKEN = 0.000005   # $5.00/M tokens
 
 
 class AnthropicProvider:
     """
     LLM provider implementation using the Anthropic Claude API.
-    Uses claude-haiku-4-5-20251001 for fast, cost-effective categorization.
+    Optional fallback/alternative provider — set LLM_PROVIDER=anthropic in
+    settings to use this (claude-haiku-4-5-20251001) as primary instead of
+    OpenAI.
     """
 
     def __init__(

@@ -50,6 +50,7 @@ async def export_report(
     start_date: date = Query(...),
     end_date: date = Query(...),
     format: str = Query(default="csv", pattern="^(csv|pdf)$"),
+    lang: str = Query(default="en", pattern="^(en|es)$", description="Language of the exported labels"),
     current_user: User = Depends(get_current_user),
     service: ReportService = Depends(get_report_service),
 ) -> Response:
@@ -57,12 +58,12 @@ async def export_report(
     report = await service.generate_summary(user_id=current_user.id, request=request)
 
     if format == "pdf":
-        exporter = PDFExporter()
+        exporter = PDFExporter(lang=lang)
         content = exporter.export(report)
         media_type = "application/pdf"
         filename = f"report_{start_date}_{end_date}.pdf"
     else:
-        exporter_csv = CSVExporter()
+        exporter_csv = CSVExporter(lang=lang)
         content = exporter_csv.export(report)
         media_type = "text/csv"
         filename = f"report_{start_date}_{end_date}.csv"

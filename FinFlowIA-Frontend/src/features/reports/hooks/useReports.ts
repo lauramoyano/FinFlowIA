@@ -24,6 +24,7 @@ export function useExportReport() {
       start_date: DateString;
       end_date: DateString;
       format: "csv" | "pdf";
+      lang: "es" | "en";
     }) => reportsApi.exportReport(params),
     onSuccess: (blob, variables) => {
       // Trigger browser download

@@ -1,6 +1,8 @@
 {
+  "home": "Chat",
   "dashboard": "Dashboard",
   "transactions": "Transactions",
+  "products": "Products",
   "reports": "Reports",
   "collapseSidebar": "Collapse menu",
   "expandSidebar": "Expand menu"

@@ -2,6 +2,7 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -10,6 +11,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/Card";
 import { formatCurrency } from "@/shared/lib/utils";
+import { INCOME_COLOR } from "@/features/dashboard/lib/category-colors";
+import { useChartHighlight } from "@/features/dashboard/context/ChartHighlightContext";
 import type { CategoryBreakdown } from "@/features/dashboard/api/dashboard.api";
 
 interface IncomeChartProps {
@@ -19,10 +22,12 @@ interface IncomeChartProps {
 export function IncomeChart({ incomeCategories }: IncomeChartProps) {
   const { t, i18n } = useTranslation("dashboard");
   const { t: tTransactions } = useTranslation("transactions");
+  const { toggleCategory, getOpacity } = useChartHighlight();
 
   const chartData = incomeCategories
     .filter((cat) => parseFloat(cat.total) > 0)
     .map((cat) => ({
+      category: cat.category,
       name: tTransactions(`categories.${cat.category}`),
       amount: parseFloat(cat.total),
     }));
@@ -60,7 +65,20 @@ export function IncomeChart({ incomeCategories }: IncomeChartProps) {
               }
             />
             <Tooltip formatter={(value: number) => [formatCurrency(value), t("charts.amount")]} />
-            <Bar dataKey="amount" fill="#10b981" radius={[4, 4, 0, 0]} />
+            <Bar
+              dataKey="amount"
+              radius={[4, 4, 0, 0]}
+              onClick={(data: { category: string }) => toggleCategory(data.category)}
+              className="cursor-pointer"
+            >
+              {chartData.map((entry) => (
+                <Cell
+                  key={entry.category}
+                  fill={INCOME_COLOR}
+                  fillOpacity={getOpacity(entry.category)}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

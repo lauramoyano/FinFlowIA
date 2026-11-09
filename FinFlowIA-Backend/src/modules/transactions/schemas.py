@@ -28,6 +28,29 @@ class CreateTransactionRequest(BaseModel):
         return v
 
 
+class ParseTransactionTextRequest(BaseModel):
+    """Request schema for parsing a free-text chat message into transaction fields."""
+
+    text: str = Field(min_length=1, max_length=500)
+
+
+class ParsedTransactionResponse(BaseModel):
+    """
+    Response schema for a parsed (not yet created) transaction. Field names
+    mirror CreateTransactionRequest so the frontend can reuse the same types
+    when the user confirms and calls POST /transactions. When `error` is set,
+    the other fields are not reliable and no transaction should be created.
+    """
+
+    description: str
+    amount: Decimal | None
+    transaction_type: TransactionType | None
+    transaction_date: date
+    category: str
+    confidence: float
+    error: str | None = None
+
+
 class UpdateTransactionRequest(BaseModel):
     """Request schema for partially updating a transaction."""
 

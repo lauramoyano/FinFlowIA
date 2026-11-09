@@ -2,6 +2,8 @@ import apiClient from "@/shared/lib/api-client";
 import type { ApiResponse, PaginatedResponse } from "@/shared/types/api.types";
 import type {
   CreateTransactionRequest,
+  OrchestratorResponse,
+  ParsedTransaction,
   Transaction,
   TransactionFilters,
   UpdateTransactionRequest,
@@ -37,6 +39,14 @@ export const transactionsApi = {
     return response.data.data;
   },
 
+  parseText: async (text: string): Promise<ParsedTransaction> => {
+    const response = await apiClient.post<ApiResponse<ParsedTransaction>>(
+      "/transactions/parse",
+      { text },
+    );
+    return response.data.data;
+  },
+
   update: async (id: UUID, data: UpdateTransactionRequest): Promise<Transaction> => {
     const response = await apiClient.put<ApiResponse<Transaction>>(
       `/transactions/${id}`,
@@ -47,5 +57,18 @@ export const transactionsApi = {
 
   delete: async (id: UUID): Promise<void> => {
     await apiClient.delete(`/transactions/${id}`);
+  },
+};
+
+export const orchestratorApi = {
+  sendMessage: async (
+    conversationId: string | null,
+    text: string,
+  ): Promise<OrchestratorResponse> => {
+    const response = await apiClient.post<ApiResponse<OrchestratorResponse>>(
+      "/orchestrator/message",
+      { conversation_id: conversationId, text },
+    );
+    return response.data.data;
   },
 };

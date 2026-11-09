@@ -16,6 +16,24 @@
     "noData": "No data available",
     "transactionCount_one": "{{count}} transaction",
     "transactionCount_other": "{{count}} transactions",
-    "amount": "Amount"
+    "amount": "Amount",
+    "waterfall": "Income & Expense Flow",
+    "waterfallIncome": "Income",
+    "waterfallBalance": "Balance",
+    "combined": "Income vs. Expenses Over Time",
+    "incomeVsExpense": "Income vs. Expenses",
+    "trend": "Balance Trend",
+    "income": "Income",
+    "expense": "Expenses",
+    "noChartData": "No data for this period"
+  },
+  "filters": {
+    "granularityLabel": "Group by",
+    "granularityDay": "Day",
+    "granularityMonth": "Month",
+    "granularityYear": "Year",
+    "fromLabel": "From",
+    "toLabel": "To",
+    "apply": "Apply"
   }
 }

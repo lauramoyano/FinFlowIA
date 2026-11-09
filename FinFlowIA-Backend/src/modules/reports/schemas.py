@@ -42,3 +42,21 @@ class ReportResponse(BaseModel):
     transaction_count: int
     by_category: list[CategorySummary]
     generated_at: str
+
+
+class PeriodSummaryDataResponse(BaseModel):
+    """Income/expense/balance totals for one resolved date range."""
+
+    label: str
+    start_date: date
+    end_date: date
+    total_income: Decimal
+    total_expenses: Decimal
+    balance: Decimal
+
+
+class PeriodSummaryResponse(BaseModel):
+    """Result of a completed period-summary request (plus a comparison period, if requested)."""
+
+    current: PeriodSummaryDataResponse
+    previous: PeriodSummaryDataResponse | None = None

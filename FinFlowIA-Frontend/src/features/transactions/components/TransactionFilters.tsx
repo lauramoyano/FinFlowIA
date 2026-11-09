@@ -36,11 +36,11 @@ export function TransactionFiltersBar({ onFilter, onReset }: TransactionFiltersP
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-wrap gap-3 rounded-lg border bg-card p-4"
     >
-      <div className="min-w-[140px]">
-        <label className="text-sm font-medium">{t("filters.typeLabel")}</label>
+      <div className="flex min-w-[140px] flex-col gap-1">
+        <label className="text-sm font-medium leading-none">{t("filters.typeLabel")}</label>
         <select
           {...register("transaction_type")}
-          className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          className="flex h-10 w-full rounded-md border border-input bg-background py-2 pl-3 pr-8 text-sm"
         >
           <option value="">{t("filters.allTypes")}</option>
           <option value="income">{t("list.income")}</option>
@@ -48,11 +48,11 @@ export function TransactionFiltersBar({ onFilter, onReset }: TransactionFiltersP
         </select>
       </div>
 
-      <div className="min-w-[140px]">
-        <label className="text-sm font-medium">{t("filters.categoryLabel")}</label>
+      <div className="flex min-w-[140px] flex-col gap-1">
+        <label className="text-sm font-medium leading-none">{t("filters.categoryLabel")}</label>
         <select
           {...register("category")}
-          className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          className="flex h-10 w-full rounded-md border border-input bg-background py-2 pl-3 pr-8 text-sm"
         >
           <option value="">{t("filters.allCategories")}</option>
           {categories

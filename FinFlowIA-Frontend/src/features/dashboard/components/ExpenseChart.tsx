@@ -1,36 +1,38 @@
 import {
+  Bar,
+  BarChart,
+  CartesianGrid,
   Cell,
-  Legend,
-  Pie,
-  PieChart,
   ResponsiveContainer,
   Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/Card";
 import { formatCurrency } from "@/shared/lib/utils";
+import { getCategoryColor } from "@/features/dashboard/lib/category-colors";
+import { useChartHighlight } from "@/features/dashboard/context/ChartHighlightContext";
 import type { CategoryBreakdown } from "@/features/dashboard/api/dashboard.api";
-
-const COLORS = [
-  "#8A05BE", "#10b981", "#f59e0b", "#ef4444", "#3b82f6",
-  "#06b6d4", "#f97316", "#84cc16", "#ec4899", "#6366f1",
-];
 
 interface ExpenseChartProps {
   data: CategoryBreakdown[];
 }
 
 export function ExpenseChart({ data }: ExpenseChartProps) {
-  const { t } = useTranslation("dashboard");
+  const { t, i18n } = useTranslation("dashboard");
   const { t: tTransactions } = useTranslation("transactions");
+  const { toggleCategory, getOpacity } = useChartHighlight();
 
   const chartData = data
     .filter((cat) => parseFloat(cat.total) > 0)
     .map((cat) => ({
+      category: cat.category,
       name: tTransactions(`categories.${cat.category}`),
       value: parseFloat(cat.total),
       percentage: cat.percentage,
-    }));
+    }))
+    .sort((a, b) => b.value - a.value);
 
   if (chartData.length === 0) {
     return (
@@ -45,32 +47,53 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
     );
   }
 
+  // Horizontal bars read better than a pie once there are many categories
+  // with long labels — each row stays legible instead of shrinking into a
+  // sliver that's indistinguishable by color alone.
+  const chartHeight = Math.max(280, chartData.length * 36);
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>{t("charts.expenseBreakdown")}</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={280}>
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={100}
-              paddingAngle={2}
-              dataKey="value"
-            >
-              {chartData.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
+        <ResponsiveContainer width="100%" height={chartHeight}>
+          <BarChart
+            data={chartData}
+            layout="vertical"
+            margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            <XAxis
+              type="number"
+              className="text-xs"
+              tickFormatter={(value: number) =>
+                new Intl.NumberFormat(i18n.language === "en" ? "en-US" : "es-AR", {
+                  notation: "compact",
+                  compactDisplay: "short",
+                }).format(value)
+              }
+            />
+            <YAxis type="category" dataKey="name" className="text-xs" width={150} />
             <Tooltip
               formatter={(value: number) => [formatCurrency(value), t("charts.amount")]}
             />
-            <Legend />
-          </PieChart>
+            <Bar
+              dataKey="value"
+              radius={[0, 4, 4, 0]}
+              onClick={(entry: { category: string }) => toggleCategory(entry.category)}
+              className="cursor-pointer"
+            >
+              {chartData.map((entry) => (
+                <Cell
+                  key={entry.category}
+                  fill={getCategoryColor(entry.category)}
+                  fillOpacity={getOpacity(entry.category)}
+                />
+              ))}
+            </Bar>
+          </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>

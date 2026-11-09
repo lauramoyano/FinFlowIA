@@ -10,6 +10,15 @@ from src.shared.domain.base_entity import Base  # noqa: F401
 from src.modules.auth.models import RefreshToken, User  # noqa: F401
 from src.modules.transactions.models import Category, Transaction  # noqa: F401
 from src.modules.ai.models import AICategorizationLog  # noqa: F401
+from src.modules.planning.models import (  # noqa: F401
+    DistributionTemplate,
+    DistributionTemplateItem,
+    FinancialRecommendation,
+    FinancialRecommendationItem,
+    BudgetPlan,
+    BalanceReconciliation,
+)
+from src.modules.production.models import Product, ProductionEstimate, ProductionEstimateItem  # noqa: F401
 
 from src.config.settings import settings
 

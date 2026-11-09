@@ -11,7 +11,7 @@ import { CategoryBadge } from "@/features/transactions/components/CategoryBadge"
 import { useDeleteTransaction } from "@/features/transactions/hooks/useCreateTransaction";
 import { Button } from "@/shared/components/ui/Button";
 import { LoadingSpinner } from "@/shared/components/LoadingSpinner";
-import { formatCurrency, formatDate } from "@/shared/lib/utils";
+import { cn, formatCurrency, formatDate } from "@/shared/lib/utils";
 import type { Transaction } from "@/features/transactions/types/transaction.types";
 
 const columnHelper = createColumnHelper<Transaction>();
@@ -39,7 +39,7 @@ function buildColumns(t: TFunction<"transactions">) {
           data-transaction-type={info.getValue()}
           className={
             info.getValue() === "income"
-              ? "text-green-600 dark:text-green-400 font-medium"
+              ? "text-green-700 dark:text-green-400 font-medium"
               : "text-red-600 dark:text-red-400 font-medium"
           }
         >
@@ -52,7 +52,7 @@ function buildColumns(t: TFunction<"transactions">) {
       cell: (info) => {
         const isIncome = info.row.original.transaction_type === "income";
         return (
-          <span className={isIncome ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
+          <span className={isIncome ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
             {isIncome ? "+" : "-"}
             {formatCurrency(info.getValue())}
           </span>
@@ -121,37 +121,82 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border" data-testid="transaction-list">
-      <table className="w-full text-sm">
-        <thead className="border-b bg-muted/50">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  className="px-4 py-3 text-left font-medium text-muted-foreground"
+    <div data-testid="transaction-list">
+      {/* Card list below sm: a 6-column table doesn't fit a phone screen
+          without horizontal scrolling or clipped cells (same problem the
+          products table had) — a stacked card per transaction reads much
+          better at that width. */}
+      <div className="divide-y rounded-lg border sm:hidden">
+        {transactions.map((tx) => {
+          const isIncome = tx.transaction_type === "income";
+          return (
+            <div key={tx.id} className="flex flex-col gap-2 p-4" data-testid="transaction-row-mobile">
+              <div className="flex items-start justify-between gap-2">
+                <span className="min-w-0 truncate font-medium">{tx.description}</span>
+                <span
+                  className={cn(
+                    "shrink-0 font-medium",
+                    isIncome ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400",
+                  )}
                 >
-                  {flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              className="border-b transition-colors hover:bg-muted/30"
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-4 py-3">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  {isIncome ? "+" : "-"}
+                  {formatCurrency(tx.amount)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
+                  <span className="shrink-0">{formatDate(tx.transaction_date)}</span>
+                  <CategoryBadge category={tx.category} />
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => deleteMutation.mutate(tx.id)}
+                  disabled={deleteMutation.isPending}
+                  className="h-7 shrink-0 px-2 text-xs text-destructive hover:text-destructive"
+                  data-testid="delete-transaction-button"
+                >
+                  {t("list.delete")}
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Full table from sm up. */}
+      <div className="hidden overflow-x-auto rounded-lg border sm:block">
+        <table className="w-full text-sm">
+          <thead className="border-b bg-muted/50">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="px-4 py-3 text-left font-medium text-muted-foreground"
+                  >
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                className="border-b transition-colors hover:bg-muted/30"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="px-4 py-3">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

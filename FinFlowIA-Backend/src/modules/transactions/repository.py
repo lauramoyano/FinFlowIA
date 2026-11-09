@@ -3,7 +3,7 @@ from datetime import date
 from decimal import Decimal
 
 import structlog
-from sqlalchemy import and_, desc, func, select
+from sqlalchemy import and_, desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.modules.transactions.models import Transaction
@@ -112,3 +112,46 @@ class TransactionRepository:
         await self._session.delete(transaction)
         await self._session.flush()
         return True
+
+    async def get_pending_debt_total(self, user_id: uuid.UUID) -> Decimal:
+        """
+        Sum of expense transactions representing an ongoing financial
+        commitment: recurring expenses, or installment purchases not yet
+        fully paid off. Used by the financial-recommendation agent to
+        surface pending debts alongside a reparto suggestion.
+        """
+        result = await self._session.execute(
+            select(func.coalesce(func.sum(Transaction.amount), 0)).where(
+                Transaction.user_id == user_id,
+                Transaction.transaction_type == "expense",
+                or_(
+                    Transaction.is_recurring.is_(True),
+                    and_(
+                        Transaction.installments_total.is_not(None),
+                        Transaction.installments_paid < Transaction.installments_total,
+                    ),
+                ),
+            )
+        )
+        return Decimal(result.scalar_one())
+
+    async def search_expenses_by_description(
+        self, user_id: uuid.UUID, term: str, limit: int = 20
+    ) -> list[Transaction]:
+        """
+        Past expenses whose description mentions `term` (case-insensitive).
+        Lets agents recognise spending already tied to a preparation, e.g.
+        "harina para las tortas" when the user later asks about "torta".
+        """
+        escaped = term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        result = await self._session.execute(
+            select(Transaction)
+            .where(
+                Transaction.user_id == user_id,
+                Transaction.transaction_type == "expense",
+                Transaction.description.ilike(f"%{escaped}%", escape="\\"),
+            )
+            .order_by(desc(Transaction.transaction_date))
+            .limit(limit)
+        )
+        return list(result.scalars().all())

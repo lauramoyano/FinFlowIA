@@ -1,3 +1,4 @@
+from datetime import date
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock
 
@@ -112,3 +113,107 @@ class TestAIService:
         )
         assert result.category == "uncategorized"
         assert result.confidence == 0.0
+
+
+class TestAIServiceParseTransactionText:
+    @pytest.mark.asyncio
+    async def test_parse_returns_fields_from_primary(
+        self,
+        ai_service: AIService,
+        mock_primary: AsyncMock,
+    ) -> None:
+        mock_primary.complete.return_value = LLMResponse(
+            content=(
+                '{"description": "Nafta", "amount": 500.00, "transaction_type": "expense", '
+                '"transaction_date": "2026-10-11", "category": "transport", "confidence": 0.9}'
+            ),
+            tokens_input=60,
+            tokens_output=20,
+            model="claude-haiku-4-5-20251001",
+            provider="anthropic",
+        )
+        result = await ai_service.parse_transaction_text(
+            text="gasté 500 en nafta ayer", today=date(2026, 10, 12)
+        )
+        assert result.description == "Nafta"
+        assert result.amount == Decimal("500.00")
+        assert result.transaction_type == "expense"
+        assert result.transaction_date == date(2026, 10, 11)
+        assert result.category == "transport"
+        assert result.error is None
+        mock_primary.complete.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_parse_does_not_use_cache(
+        self,
+        ai_service: AIService,
+        mock_cache: AsyncMock,
+        mock_primary: AsyncMock,
+    ) -> None:
+        mock_primary.complete.return_value = LLMResponse(
+            content=(
+                '{"description": "Venta", "amount": 1000, "transaction_type": "income", '
+                '"transaction_date": "2026-10-12", "category": "sales", "confidence": 0.8}'
+            ),
+            tokens_input=40,
+            tokens_output=15,
+            model="claude-haiku-4-5-20251001",
+            provider="anthropic",
+        )
+        await ai_service.parse_transaction_text(text="cobré 1000 de una venta", today=date(2026, 10, 12))
+        mock_cache.get.assert_not_called()
+        mock_cache.set.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_parse_returns_no_amount_error_when_model_reports_it(
+        self,
+        ai_service: AIService,
+        mock_primary: AsyncMock,
+    ) -> None:
+        mock_primary.complete.return_value = LLMResponse(
+            content='{"error": "no_amount"}',
+            tokens_input=20,
+            tokens_output=5,
+            model="claude-haiku-4-5-20251001",
+            provider="anthropic",
+        )
+        result = await ai_service.parse_transaction_text(text="hola", today=date(2026, 10, 12))
+        assert result.error == "no_amount"
+        assert result.amount is None
+
+    @pytest.mark.asyncio
+    async def test_parse_falls_back_when_primary_fails(
+        self,
+        ai_service: AIService,
+        mock_primary: AsyncMock,
+        mock_fallback: AsyncMock,
+    ) -> None:
+        mock_primary.complete.side_effect = LLMProviderError("API timeout")
+        mock_fallback.complete.return_value = LLMResponse(
+            content=(
+                '{"description": "Compra", "amount": 200, "transaction_type": "expense", '
+                '"transaction_date": "2026-10-12", "category": "other", "confidence": 0.6}'
+            ),
+            tokens_input=40,
+            tokens_output=15,
+            model="gpt-4o-mini",
+            provider="openai",
+        )
+        result = await ai_service.parse_transaction_text(text="pagué 200", today=date(2026, 10, 12))
+        assert result.error is None
+        assert result.amount == Decimal("200")
+        mock_fallback.complete.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_parse_returns_provider_unavailable_when_all_fail(
+        self,
+        mock_cache: AsyncMock,
+        mock_primary: AsyncMock,
+        mock_fallback: AsyncMock,
+    ) -> None:
+        mock_primary.complete.side_effect = LLMProviderError("Primary failed")
+        mock_fallback.complete.side_effect = LLMProviderError("Fallback failed")
+
+        service = AIService(primary=mock_primary, fallback=mock_fallback, cache=mock_cache)
+        result = await service.parse_transaction_text(text="algo", today=date(2026, 10, 12))
+        assert result.error == "provider_unavailable"

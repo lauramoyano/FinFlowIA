@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useTransactions } from "@/features/transactions/hooks/useTransactions";
 import { TransactionList } from "@/features/transactions/components/TransactionList";
 import { TransactionForm } from "@/features/transactions/components/TransactionForm";
+import { TransactionChatInput } from "@/features/transactions/components/TransactionChatInput";
 import { TransactionFiltersBar } from "@/features/transactions/components/TransactionFilters";
 import { CategoryManager } from "@/features/categories/components/CategoryManager";
 import { Button } from "@/shared/components/ui/Button";
@@ -10,7 +11,10 @@ import type { TransactionFilters } from "@/features/transactions/types/transacti
 
 export function TransactionsPage() {
   const [filters, setFilters] = useState<TransactionFilters>({ page: 1, page_size: 20 });
-  const [showForm, setShowForm] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  // Chat is the default entry point (simpler for non-technical users); the
+  // traditional form stays available via a link inside the panel.
+  const [addMode, setAddMode] = useState<"chat" | "form">("chat");
   const [showCategories, setShowCategories] = useState(false);
   const { t } = useTranslation("transactions");
   const { t: tCommon } = useTranslation("common");
@@ -36,20 +40,42 @@ export function TransactionsPage() {
             {showCategories ? tCommon("actions.close") : t("manager.manageButton")}
           </Button>
           <Button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => setShowAdd(!showAdd)}
             data-testid="add-transaction"
           >
-            {showForm ? tCommon("actions.cancel") : t("page.addTransaction")}
+            {showAdd ? tCommon("actions.cancel") : t("page.addTransaction")}
           </Button>
         </div>
       </div>
 
       {showCategories && <CategoryManager />}
 
-      {showForm && (
+      {showAdd && (
         <div className="rounded-lg border bg-card p-6">
           <h2 className="mb-4 text-lg font-semibold">{t("page.newTransaction")}</h2>
-          <TransactionForm onSuccess={() => setShowForm(false)} />
+          {addMode === "chat" ? (
+            <>
+              <TransactionChatInput onSuccess={() => setShowAdd(false)} />
+              <button
+                type="button"
+                className="mt-3 text-sm text-primary underline-offset-4 hover:underline"
+                onClick={() => setAddMode("form")}
+              >
+                {t("chat.switchToFormLink")}
+              </button>
+            </>
+          ) : (
+            <>
+              <TransactionForm onSuccess={() => setShowAdd(false)} />
+              <button
+                type="button"
+                className="mt-3 text-sm text-primary underline-offset-4 hover:underline"
+                onClick={() => setAddMode("chat")}
+              >
+                {t("chat.switchToChatLink")}
+              </button>
+            </>
+          )}
         </div>
       )}
 

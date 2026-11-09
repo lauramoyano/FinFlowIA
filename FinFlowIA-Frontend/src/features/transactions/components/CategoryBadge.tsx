@@ -7,17 +7,24 @@ import type { CategoryType } from "@/features/transactions/types/transaction.typ
 // includes an open `string` branch (custom categories), so a finite object
 // literal can't satisfy it as an index type. Custom categories fall back to
 // the "other" styling below.
+//
+// A single purple/violet/fuchsia family at varying shades — matching the
+// monochrome purple ramp used for charts (features/dashboard/lib/category-colors.ts)
+// — instead of a rainbow of unrelated hues, so a pill reads as part of the
+// same app as the rest of the (grayscale + one purple accent) UI. The label
+// text is always shown alongside, so a shared hue family is never the sole
+// identifier between categories.
 const CATEGORY_CLASSNAMES: Record<string, string> = {
-  food: "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
-  transport: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
-  utilities: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
-  supplies: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
-  marketing: "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300",
-  payroll: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
-  rent: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
-  equipment: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300",
-  sales: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
-  services: "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300",
+  payroll: "bg-violet-200 text-violet-900 dark:bg-violet-900/50 dark:text-violet-200",
+  sales: "bg-violet-100 text-violet-800 dark:bg-violet-900/40 dark:text-violet-300",
+  services: "bg-purple-200 text-purple-900 dark:bg-purple-900/50 dark:text-purple-200",
+  rent: "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300",
+  utilities: "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900/40 dark:text-fuchsia-300",
+  marketing: "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+  equipment: "bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+  food: "bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-300",
+  transport: "bg-violet-50 text-violet-600 dark:bg-violet-900/20 dark:text-violet-300",
+  supplies: "bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-300",
   other: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
   uncategorized: "bg-gray-50 text-gray-500 dark:bg-gray-800/60 dark:text-gray-400",
 };

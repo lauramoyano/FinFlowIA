@@ -4,11 +4,22 @@ from decimal import Decimal
 
 import structlog
 
-from src.modules.dashboard.schemas import CategoryBreakdown, DashboardResponse
+from src.modules.dashboard.schemas import (
+    CategoryBreakdown,
+    DashboardChartsResponse,
+    DashboardResponse,
+    Granularity,
+    TimeSeriesPoint,
+)
 from src.modules.reports.repository import ReportRepository
 from src.modules.transactions.repository import TransactionRepository
 from src.modules.transactions.schemas import TransactionResponse
-from src.shared.utils.datetime_utils import end_of_month, start_of_month
+from src.shared.utils.datetime_utils import (
+    end_of_month,
+    format_bucket_label,
+    iter_bucket_starts,
+    start_of_month,
+)
 
 logger = structlog.get_logger(__name__)
 
@@ -66,6 +77,7 @@ class DashboardService:
             by_category.append(
                 CategoryBreakdown(
                     category=row["category"],
+                    transaction_type=row["transaction_type"],
                     total=total,
                     count=row["count"],
                     percentage=round(percentage, 2),
@@ -87,4 +99,59 @@ class DashboardService:
             by_category=by_category,
             recent_transactions=recent_responses,
             period_label=period_label,
+        )
+
+    async def get_dashboard_charts(
+        self,
+        user_id: uuid.UUID,
+        start_date: date,
+        end_date: date,
+        granularity: Granularity,
+    ) -> DashboardChartsResponse:
+        """Build chart-ready time series + category breakdown for a date range."""
+        raw_points = await self._report_repo.get_time_series(
+            user_id=user_id,
+            start_date=start_date,
+            end_date=end_date,
+            granularity=granularity.value,
+        )
+        by_bucket = {p["bucket"]: p for p in raw_points}
+
+        time_series = []
+        for bucket_start in iter_bucket_starts(start_date, end_date, granularity.value):
+            row = by_bucket.get(bucket_start)
+            time_series.append(
+                TimeSeriesPoint(
+                    period=format_bucket_label(bucket_start, granularity.value),
+                    date=bucket_start,
+                    income=row["income"] if row else Decimal("0"),
+                    expense=row["expense"] if row else Decimal("0"),
+                )
+            )
+
+        category_rows = await self._report_repo.get_totals_by_category(
+            user_id=user_id, start_date=start_date, end_date=end_date
+        )
+        grand_total = sum((Decimal(str(row["total"])) for row in category_rows), Decimal("0"))
+
+        by_category = []
+        for row in category_rows:
+            total = Decimal(str(row["total"]))
+            percentage = float(total / grand_total * 100) if grand_total > 0 else 0.0
+            by_category.append(
+                CategoryBreakdown(
+                    category=row["category"],
+                    transaction_type=row["transaction_type"],
+                    total=total,
+                    count=row["count"],
+                    percentage=round(percentage, 2),
+                )
+            )
+
+        return DashboardChartsResponse(
+            start_date=start_date,
+            end_date=end_date,
+            granularity=granularity,
+            time_series=time_series,
+            by_category=by_category,
         )

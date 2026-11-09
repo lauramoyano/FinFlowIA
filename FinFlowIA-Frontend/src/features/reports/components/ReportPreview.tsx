@@ -39,7 +39,7 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
             <CardTitle className="text-sm text-muted-foreground">{t("preview.totalIncome")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+            <p className="text-2xl font-bold text-green-700 dark:text-green-400">
               {formatCurrency(report.total_income)}
             </p>
           </CardContent>
@@ -61,7 +61,7 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
             <CardTitle className="text-sm text-muted-foreground">{t("preview.netBalance")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className={`text-2xl font-bold ${parseFloat(report.net_balance) >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+            <p className={`text-2xl font-bold ${parseFloat(report.net_balance) >= 0 ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
               {formatCurrency(report.net_balance)}
             </p>
           </CardContent>

@@ -24,10 +24,12 @@ export function CategoryBreakdownList({ categories }: CategoryBreakdownProps) {
         {sorted.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">{t("charts.noData")}</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4 sm:space-y-3">
             {sorted.map((cat) => (
-              <div key={cat.category} className="flex items-center gap-3">
-                <CategoryBadge category={cat.category as CategoryType} />
+              <div key={cat.category} className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3">
+                <div className="sm:w-44 sm:shrink-0">
+                  <CategoryBadge category={cat.category as CategoryType} className="max-w-full truncate" />
+                </div>
                 <div className="flex-1">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
@@ -35,16 +37,18 @@ export function CategoryBreakdownList({ categories }: CategoryBreakdownProps) {
                     </span>
                     <span className="font-medium">{formatCurrency(cat.total)}</span>
                   </div>
-                  <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                    <div
-                      className="h-full rounded-full bg-primary"
-                      style={{ width: `${Math.min(cat.percentage, 100)}%` }}
-                    />
+                  <div className="mt-1 flex items-center gap-2">
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-primary"
+                        style={{ width: `${Math.min(cat.percentage, 100)}%` }}
+                      />
+                    </div>
+                    <span className="w-10 shrink-0 text-right text-xs text-muted-foreground">
+                      {cat.percentage.toFixed(1)}%
+                    </span>
                   </div>
                 </div>
-                <span className="w-12 text-right text-xs text-muted-foreground">
-                  {cat.percentage.toFixed(1)}%
-                </span>
               </div>
             ))}
           </div>

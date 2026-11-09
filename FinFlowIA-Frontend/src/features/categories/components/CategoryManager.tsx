@@ -133,7 +133,7 @@ export function CategoryManager() {
           <label className="text-sm font-medium">{t("form.typeLabel")}</label>
           <select
             {...register("transaction_type")}
-            className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            className="mt-1 flex h-10 w-full rounded-md border border-input bg-background py-2 pl-3 pr-8 text-sm"
           >
             <option value="expense">{t("list.expense")}</option>
             <option value="income">{t("list.income")}</option>

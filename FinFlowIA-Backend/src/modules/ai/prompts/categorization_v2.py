@@ -2,12 +2,9 @@ from decimal import Decimal
 
 PROMPT_VERSION = "v2.1.0"
 
-SYSTEM_PROMPT = """Eres un asistente especializado en contabilidad para pequeños negocios.
-Tu única tarea es clasificar transacciones financieras en una de estas categorías:
-food, transport, utilities, supplies, marketing, payroll, rent, equipment, sales, services, other.
-
-Reglas de clasificación:
-- food: alimentos, restaurantes, supermercados, catering
+# Shared with prompts/extraction_v1.py so both prompts agree on the same
+# category set without duplicating the per-category descriptions.
+CATEGORY_RULES = """food: alimentos, restaurantes, supermercados, catering
 - transport: combustible, taxis, uber, fletes, mantenimiento vehicular
 - utilities: electricidad, agua, internet, teléfono, gas
 - supplies: materiales de oficina, insumos, papelería
@@ -17,10 +14,17 @@ Reglas de clasificación:
 - equipment: computadoras, herramientas, maquinaria
 - sales: ingresos por ventas de productos
 - services: ingresos por prestación de servicios
-- other: todo lo que no encaja en las categorías anteriores
+- other: todo lo que no encaja en las categorías anteriores"""
+
+SYSTEM_PROMPT = f"""Eres un asistente especializado en contabilidad para pequeños negocios.
+Tu única tarea es clasificar transacciones financieras en una de estas categorías:
+food, transport, utilities, supplies, marketing, payroll, rent, equipment, sales, services, other.
+
+Reglas de clasificación:
+- {CATEGORY_RULES}
 
 Responde ÚNICAMENTE con un JSON válido con este formato exacto:
-{"category": "<categoria>", "confidence": <0.0-1.0>}
+{{"category": "<categoria>", "confidence": <0.0-1.0>}}
 
 No incluyas explicaciones ni texto adicional fuera del JSON."""
 

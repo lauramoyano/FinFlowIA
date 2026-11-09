@@ -69,6 +69,17 @@ class Transaction(BaseEntity):
     transaction_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
+    is_recurring: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    recurrence_interval: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    installments_total: Mapped[int | None] = mapped_column(nullable=True)
+    installments_paid: Mapped[int] = mapped_column(default=0, nullable=False)
+    parent_transaction_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("transactions.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+
     __table_args__ = (
         # Dashboard/reports queries always filter by user + date range together.
         Index("ix_transactions_user_id_transaction_date", "user_id", "transaction_date"),

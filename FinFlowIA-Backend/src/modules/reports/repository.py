@@ -78,3 +78,45 @@ class ReportRepository:
             }
             for row in result.all()
         ]
+
+    async def get_time_series(
+        self,
+        user_id: uuid.UUID,
+        start_date: date,
+        end_date: date,
+        granularity: str,
+    ) -> list[dict]:
+        """
+        Income/expense totals grouped into date_trunc buckets.
+        Only non-empty buckets are returned — callers must backfill zero
+        buckets themselves for a continuous chart.
+        """
+        bucket = func.date_trunc(granularity, Transaction.transaction_date).label("bucket")
+        result = await self._session.execute(
+            select(
+                bucket,
+                func.sum(
+                    case((Transaction.transaction_type == "income", Transaction.amount), else_=0)
+                ).label("income"),
+                func.sum(
+                    case((Transaction.transaction_type == "expense", Transaction.amount), else_=0)
+                ).label("expense"),
+            )
+            .where(
+                and_(
+                    Transaction.user_id == user_id,
+                    Transaction.transaction_date >= start_date,
+                    Transaction.transaction_date <= end_date,
+                )
+            )
+            .group_by(bucket)
+            .order_by(bucket)
+        )
+        return [
+            {
+                "bucket": row.bucket.date(),
+                "income": row.income or Decimal("0"),
+                "expense": row.expense or Decimal("0"),
+            }
+            for row in result.all()
+        ]

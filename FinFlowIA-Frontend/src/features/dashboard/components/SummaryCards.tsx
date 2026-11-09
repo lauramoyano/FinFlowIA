@@ -26,12 +26,12 @@ export function SummaryCards({
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t("summary.totalIncome")}
           </CardTitle>
-          <svg className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
           </svg>
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+          <p className="text-2xl font-bold text-green-700 dark:text-green-400">
             {formatCurrency(totalIncome)}
           </p>
           <p className="text-xs text-muted-foreground">{periodLabel}</p>
@@ -60,12 +60,12 @@ export function SummaryCards({
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t("summary.netBalance")}
           </CardTitle>
-          <svg className={`h-4 w-4 ${isPositive ? "text-green-500" : "text-red-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className={`h-4 w-4 ${isPositive ? "text-green-600" : "text-red-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </CardHeader>
         <CardContent>
-          <p className={`text-2xl font-bold ${isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+          <p className={`text-2xl font-bold ${isPositive ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
             {isPositive ? "+" : ""}{formatCurrency(balance)}
           </p>
           <p className="text-xs text-muted-foreground">{periodLabel}</p>

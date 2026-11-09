@@ -9,6 +9,7 @@ import landingEs from "./locales/es/landing.json";
 import dashboardEs from "./locales/es/dashboard.json";
 import transactionsEs from "./locales/es/transactions.json";
 import reportsEs from "./locales/es/reports.json";
+import productsEs from "./locales/es/products.json";
 
 import commonEn from "./locales/en/common.json";
 import navEn from "./locales/en/nav.json";
@@ -17,6 +18,7 @@ import landingEn from "./locales/en/landing.json";
 import dashboardEn from "./locales/en/dashboard.json";
 import transactionsEn from "./locales/en/transactions.json";
 import reportsEn from "./locales/en/reports.json";
+import productsEn from "./locales/en/products.json";
 
 export const defaultNS = "common";
 
@@ -29,6 +31,7 @@ export const resources = {
     dashboard: dashboardEs,
     transactions: transactionsEs,
     reports: reportsEs,
+    products: productsEs,
   },
   en: {
     common: commonEn,
@@ -38,6 +41,7 @@ export const resources = {
     dashboard: dashboardEn,
     transactions: transactionsEn,
     reports: reportsEn,
+    products: productsEn,
   },
 } as const;
 

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
@@ -16,9 +16,12 @@ import type { Transaction } from "@/features/transactions/types/transaction.type
 interface TransactionFormProps {
   onSuccess?: (transaction: Transaction) => void;
   onCancel?: () => void;
+  // Pre-fills the form — used when the user clicks "Editar" on a chat-parsed
+  // transaction (see TransactionChatInput) instead of typing from scratch.
+  defaultValues?: Partial<CreateTransactionFormValues>;
 }
 
-export function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
+export function TransactionForm({ onSuccess, onCancel, defaultValues }: TransactionFormProps) {
   const createMutation = useCreateTransaction();
   const { t } = useTranslation("transactions");
   const { t: tCommon } = useTranslation("common");
@@ -29,12 +32,14 @@ export function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<CreateTransactionFormValues>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
       transaction_date: new Date().toISOString().split("T")[0],
       transaction_type: "expense",
+      ...defaultValues,
     },
   });
 
@@ -42,6 +47,18 @@ export function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
   // TanStack Query) whenever the user flips the type dropdown.
   const selectedType = watch("transaction_type");
   const { data: categories = [] } = useCategories(selectedType);
+
+  // The category <select> only has a matching <option> once `categories`
+  // finishes loading. If a defaultValues.category was passed (pre-filling
+  // from a chat-parsed transaction) and categories were still loading at
+  // mount, the browser silently falls back to the first option ("let AI
+  // categorize") since no <option> existed yet — re-apply it once the real
+  // option exists.
+  useEffect(() => {
+    if (defaultValues?.category && categories.some((c) => c.name === defaultValues.category)) {
+      setValue("category", defaultValues.category);
+    }
+  }, [categories]);
 
   const onSubmit = (data: CreateTransactionFormValues) => {
     createMutation.mutate(data, {
@@ -83,7 +100,7 @@ export function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
         <select
           {...register("transaction_type")}
           name="type"
-          className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          className="mt-1 flex h-10 w-full rounded-md border border-input bg-background py-2 pl-3 pr-8 text-sm"
         >
           <option value="expense">{t("list.expense")}</option>
           <option value="income">{t("list.income")}</option>
@@ -104,7 +121,7 @@ export function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
         <label className="text-sm font-medium">{t("form.categoryLabel")}</label>
         <select
           {...register("category")}
-          className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          className="mt-1 flex h-10 w-full rounded-md border border-input bg-background py-2 pl-3 pr-8 text-sm"
         >
           <option value="">{t("form.categoryAiOption")}</option>
           {categories

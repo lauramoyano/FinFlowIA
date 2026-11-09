@@ -9,6 +9,7 @@
     "endDate": "Fecha de fin",
     "generate": "Generar",
     "exportCsv": "Exportar CSV",
+    "exportError": "No se pudo descargar el reporte. Intentá de nuevo.",
     "exportPdf": "Exportar PDF"
   },
   "preview": {

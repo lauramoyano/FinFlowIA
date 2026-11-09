@@ -52,7 +52,7 @@ export function LandingNavbar() {
           <LanguageSwitcher />
           <ThemeToggle />
           {token ? (
-            <Link to="/dashboard" className={cn(buttonVariants(), "ml-2")}>
+            <Link to="/home" className={cn(buttonVariants(), "ml-2")}>
               {t("nav.goToDashboard")}
             </Link>
           ) : (
@@ -104,7 +104,7 @@ export function LandingNavbar() {
           </ul>
           <div className="container flex flex-col gap-2 border-t border-border pb-6 pt-4">
             {token ? (
-              <Link to="/dashboard" onClick={closeMenu} className={cn(buttonVariants())}>
+              <Link to="/home" onClick={closeMenu} className={cn(buttonVariants())}>
                 {t("nav.goToDashboard")}
               </Link>
             ) : (

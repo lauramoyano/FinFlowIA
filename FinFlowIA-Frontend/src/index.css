@@ -36,6 +36,40 @@
     --ring: 283 90% 45%;
 
     --radius: 0.5rem;
+
+    /* Chart categorical palette: a single-hue RED ramp (light->dark steps,
+       ~343-355°/0-14°) used only by the expense breakdown chart — this app
+       colors expenses red / income green everywhere else, so an expense-only
+       chart's per-category steps are shades of that same red rather than an
+       unrelated hue. Trade-off, deliberate: a monochrome ramp used for
+       category IDENTITY (not magnitude) fails the categorical CVD-adjacency
+       check by design (validated via dataviz skill's validate_palette.js —
+       lightness band/chroma floor/contrast all pass, CVD does not). Every
+       chart that reads this always shows the category name directly (axis,
+       legend, or tooltip), so color is a supporting cue, never the sole
+       identifier. Dark mode gets its own lightness steps, not an auto-flip. */
+    --chart-payroll: 0 82% 34%;
+    --chart-rent: 355 76% 40%;
+    --chart-utilities: 8 70% 46%;
+    --chart-marketing: 350 68% 50%;
+    --chart-equipment: 14 62% 54%;
+    --chart-food: 343 58% 58%;
+    --chart-sales: 0 82% 44%;
+    --chart-services: 10 70% 48%;
+    --chart-transport: 352 55% 62%;
+    --chart-supplies: 12 62% 68%;
+    --chart-neutral: 215 16% 57%;
+    --chart-neutral-muted: 215 20% 80%;
+
+    /* Semantic expense/income red+green, used by the income-vs-expense style
+       charts (not the per-category ramp above). Light mode uses the same
+       dark red as the expense ramp's "Nómina" step for a stronger, more
+       legible red against a white surface; dark mode keeps the lighter red
+       that already worked well against the dark surface. Income green gets
+       the same treatment: a slightly darker emerald in light mode, the
+       original shade kept for dark. */
+    --chart-expense: 0 82% 34%;
+    --chart-income: 161 94% 30%;
   }
 
   .dark {
@@ -61,12 +95,36 @@
     --accent: 271 30% 22%;
     --accent-foreground: 283 60% 90%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Lighter red for legibility against dark backgrounds — the previous
+       30% lightness was tuned for use as a solid button background, but
+       this color is mostly used as plain text (delete links/buttons),
+       where it read as nearly invisible on dark surfaces. Same approach
+       as --primary above; foreground flips to a dark red for contrast if
+       ever used as a solid background instead. */
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 0 84% 14%;
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 283 80% 55%;
+
+    /* Same red ramp as :root, re-stepped for the dark surface. */
+    --chart-payroll: 0 78% 62%;
+    --chart-rent: 355 73% 58%;
+    --chart-utilities: 8 68% 56%;
+    --chart-marketing: 350 66% 52%;
+    --chart-equipment: 14 60% 50%;
+    --chart-food: 343 58% 59%;
+    --chart-sales: 0 78% 58%;
+    --chart-services: 10 66% 54%;
+    --chart-transport: 352 52% 48%;
+    --chart-supplies: 12 48% 60%;
+    --chart-neutral: 215 14% 46%;
+    --chart-neutral-muted: 215 14% 34%;
+
+    /* Lighter red/green for dark mode — kept as-is (was the only expense/income color before). */
+    --chart-expense: 0 84% 60%;
+    --chart-income: 160 84% 39%;
   }
 }
 

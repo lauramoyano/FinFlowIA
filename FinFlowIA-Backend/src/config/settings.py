@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     # LLM
     anthropic_api_key: str = "sk-ant-placeholder"
     openai_api_key: str | None = None
-    llm_provider: str = "anthropic"
+    llm_provider: str = "openai"
     llm_cache_ttl_seconds: int = 3600
 
     # Auth / Security

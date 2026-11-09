@@ -13,7 +13,7 @@ export function ReportGenerator({ onGenerate }: ReportGeneratorProps) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const exportMutation = useExportReport();
-  const { t } = useTranslation("reports");
+  const { t, i18n } = useTranslation("reports");
 
   const handleGenerate = () => {
     if (startDate && endDate) {
@@ -23,7 +23,12 @@ export function ReportGenerator({ onGenerate }: ReportGeneratorProps) {
 
   const handleExport = (format: "csv" | "pdf") => {
     if (startDate && endDate) {
-      exportMutation.mutate({ start_date: startDate, end_date: endDate, format });
+      exportMutation.mutate({
+        start_date: startDate,
+        end_date: endDate,
+        format,
+        lang: i18n.language.startsWith("es") ? "es" : "en",
+      });
     }
   };
 
@@ -65,6 +70,11 @@ export function ReportGenerator({ onGenerate }: ReportGeneratorProps) {
           </Button>
         </div>
       </div>
+      {exportMutation.isError && (
+        <p className="mt-3 text-sm text-destructive" role="alert">
+          {t("generator.exportError")}
+        </p>
+      )}
     </div>
   );
 }

@@ -7,8 +7,10 @@ import { AppLayout } from "@/shared/components/layout/AppLayout";
 // (see git history / ProtectedRoute.tsx, which is fully implemented and ready)
 // once login is the last remaining piece to wire up.
 import { LoginPage } from "@/pages/LoginPage";
+import { HomePage } from "@/pages/HomePage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { TransactionsPage } from "@/pages/TransactionsPage";
+import { ProductsPage } from "@/pages/ProductsPage";
 import { ReportsPage } from "@/pages/ReportsPage";
 
 export const router = createBrowserRouter([
@@ -37,12 +39,20 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       {
+        path: "home",
+        element: <HomePage />,
+      },
+      {
         path: "dashboard",
         element: <DashboardPage />,
       },
       {
         path: "transactions",
         element: <TransactionsPage />,
+      },
+      {
+        path: "products",
+        element: <ProductsPage />,
       },
       {
         path: "reports",

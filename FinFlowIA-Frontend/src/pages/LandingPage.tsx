@@ -16,7 +16,7 @@ export function LandingPage() {
 
   // Skip the marketing page for users who are already signed in.
   if (token) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   return (

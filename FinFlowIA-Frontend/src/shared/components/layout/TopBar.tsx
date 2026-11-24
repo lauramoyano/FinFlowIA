@@ -19,6 +19,7 @@ export function TopBar() {
           onClick={openMobile}
           className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground md:hidden"
           aria-label={t("openMenu")}
+          data-testid="open-menu"
         >
           <Menu className="h-5 w-5" />
         </button>

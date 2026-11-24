@@ -60,6 +60,7 @@ export function TransactionsPage() {
                 type="button"
                 className="mt-3 text-sm text-primary underline-offset-4 hover:underline"
                 onClick={() => setAddMode("form")}
+                data-testid="switch-to-form"
               >
                 {t("chat.switchToFormLink")}
               </button>

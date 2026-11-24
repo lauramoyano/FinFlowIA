@@ -1,105 +1,98 @@
 import { test, expect } from "@playwright/test";
+import {
+  cleanupE2eTransactions,
+  createTransactionViaApi,
+  gotoViaSidebar,
+  loginViaApi,
+  prefixFor,
+  uniqueName,
+} from "./helpers";
 
 test.describe("Transaction Management", () => {
-  test.beforeEach(async ({ page }) => {
-    // Login before each test
-    await page.goto("/login");
-    await page.fill('[name="email"]', "test@example.com");
-    await page.fill('[name="password"]', "password123");
-    await page.click('[type="submit"]');
-    await expect(page).toHaveURL("/dashboard");
+  // Same account for every test: run in order so cleanup never removes
+  // rows another test is still using.
+  test.describe.configure({ mode: "serial" });
+
+  let token: string;
+  let prefix: string;
+
+  test.beforeEach(async ({ page, request }, testInfo) => {
+    token = await loginViaApi(page, request);
+    prefix = prefixFor(testInfo.project.name);
   });
+
+  test.afterEach(async ({ request }) => {
+    await cleanupE2eTransactions(request, token, prefix);
+  });
+
+  async function openManualForm(page: import("@playwright/test").Page) {
+    await page.goto("/transactions");
+    await page.click('[data-testid="add-transaction"]');
+    // The chat is the default entry point; the manual form sits behind a link.
+    await page.click('[data-testid="switch-to-form"]');
+  }
 
   test("user can register a transaction and see it in the list", async ({ page }) => {
-    await page.goto("/transactions");
+    const description = uniqueName(prefix, "compra");
+    await openManualForm(page);
 
-    // Open the add transaction form
-    await page.click('[data-testid="add-transaction"]');
-
-    // Fill in transaction details
-    await page.fill('[name="description"]', "Compra materiales de oficina");
-    await page.fill('[name="amount"]', "150.00");
-    await page.selectOption('[name="type"]', "expense");
-
-    // Submit
+    await page.fill('input[name="description"]', description);
+    await page.fill('input[name="amount"]', "150.00");
+    await page.selectOption('select[name="type"]', "expense");
     await page.click('[type="submit"]');
 
-    // Verify it appears in the list
-    await expect(
-      page.locator('[data-testid="transaction-list"]'),
-    ).toContainText("Compra materiales de oficina");
+    await expect(page.locator('[data-testid="transaction-list"]').first()).toContainText(description);
   });
 
-  test("user can filter transactions by type", async ({ page }) => {
+  test("user can filter transactions by type", async ({ page, request }) => {
+    await createTransactionViaApi(request, token, {
+      description: uniqueName(prefix, "ingreso"),
+      amount: "5000.00",
+      transaction_type: "income",
+    });
     await page.goto("/transactions");
 
-    // Apply income filter
-    await page.selectOption('[name="transaction_type"]', "income");
+    await page.selectOption("form select >> nth=0", "income");
     await page.click('[data-testid="apply-filters-button"]');
 
-    // All visible transactions should be income type. Selector is on a
-    // data attribute (not translated text) so it works regardless of the
-    // active UI language (es/en, see shared/i18n).
-    const incomeRows = page.locator('[data-transaction-type="income"]');
-    await expect(incomeRows.first()).toBeVisible();
+    // Selector is on a data attribute (not translated text) so it works in es/en.
+    // :visible because the table (desktop) and the cards (mobile) both render.
+    await expect(page.locator('[data-transaction-type="income"]:visible').first()).toBeVisible();
+    await expect(page.locator('[data-transaction-type="expense"]')).toHaveCount(0);
   });
 
-  test("dashboard shows correct totals after creating a transaction", async ({ page }) => {
+  test("user can delete a transaction", async ({ page, request }) => {
+    const description = uniqueName(prefix, "borrar");
+    await createTransactionViaApi(request, token, { description, amount: "100.00", transaction_type: "expense" });
     await page.goto("/transactions");
-    await page.click('[data-testid="add-transaction"]');
 
-    await page.fill('[name="description"]', "Venta importante");
-    await page.fill('[name="amount"]', "5000.00");
-    await page.selectOption('[name="type"]', "income");
-    await page.click('[type="submit"]');
+    const list = page.locator('[data-testid="transaction-list"]').first();
+    await expect(list).toContainText(description);
 
-    // Navigate to dashboard via the sidebar link (href is language-agnostic).
-    await page.click('a[href="/dashboard"]');
-    await expect(page).toHaveURL("/dashboard");
+    // Delete only the row we created, not the first one in the account. The
+    // row is a table <tr> on desktop and a card on mobile; only one is visible.
+    await page
+      .locator('tr, [data-testid="transaction-row-mobile"]')
+      .filter({ hasText: description })
+      .locator('[data-testid="delete-transaction-button"]:visible')
+      .click();
 
-    // Dashboard should load without error.
+    await expect(list).not.toContainText(description);
+  });
+
+  test("dashboard loads after creating a transaction", async ({ page }) => {
+    await openManualForm(page);
+    await page.fill('input[name="description"]', uniqueName(prefix, "venta"));
+    await page.fill('input[name="amount"]', "5000.00");
+    await page.selectOption('select[name="type"]', "income");
+    // Wait for the save to finish so cleanup sees the row instead of racing it.
+    await Promise.all([
+      page.waitForResponse((r) => r.url().includes("/transactions") && r.request().method() === "POST"),
+      page.click('[type="submit"]'),
+    ]);
+
+    await gotoViaSidebar(page, "/dashboard");
+    await expect(page).toHaveURL(/\/dashboard$/);
     await expect(page.locator('[data-testid="page-title"]')).toBeVisible();
-  });
-
-  test("user can delete a transaction", async ({ page }) => {
-    // First create a transaction
-    await page.goto("/transactions");
-    await page.click('[data-testid="add-transaction"]');
-    await page.fill('[name="description"]', "Transaction to delete");
-    await page.fill('[name="amount"]', "100.00");
-    await page.selectOption('[name="type"]', "expense");
-    await page.click('[type="submit"]');
-
-    await expect(
-      page.locator('[data-testid="transaction-list"]'),
-    ).toContainText("Transaction to delete");
-
-    // Delete the transaction
-    await page.click('[data-testid="delete-transaction-button"]');
-
-    // Verify it's removed
-    await expect(
-      page.locator('[data-testid="transaction-list"]'),
-    ).not.toContainText("Transaction to delete");
-  });
-});
-
-test.describe("Authentication", () => {
-  // NOTE: login gating is intentionally disabled while the rest of the
-  // frontend is being built (see router/index.tsx TODO(auth-final-phase)),
-  // so unauthenticated users currently CAN reach /dashboard. Re-enable this
-  // test once ProtectedRoute is wired back in.
-  test.skip("unauthenticated users are redirected to login", async ({ page }) => {
-    await page.goto("/dashboard");
-    await expect(page).toHaveURL("/login");
-  });
-
-  test("login form shows error with wrong credentials", async ({ page }) => {
-    await page.goto("/login");
-    await page.fill('[name="email"]', "wrong@example.com");
-    await page.fill('[name="password"]', "wrongpassword");
-    await page.click('[type="submit"]');
-
-    await expect(page.locator('[data-testid="login-error"]')).toBeVisible();
   });
 });

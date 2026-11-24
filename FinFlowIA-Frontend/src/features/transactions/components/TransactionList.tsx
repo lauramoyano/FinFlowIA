@@ -130,7 +130,12 @@ export function TransactionList({ transactions, isLoading }: TransactionListProp
         {transactions.map((tx) => {
           const isIncome = tx.transaction_type === "income";
           return (
-            <div key={tx.id} className="flex flex-col gap-2 p-4" data-testid="transaction-row-mobile">
+            <div
+              key={tx.id}
+              className="flex flex-col gap-2 p-4"
+              data-testid="transaction-row-mobile"
+              data-transaction-type={tx.transaction_type}
+            >
               <div className="flex items-start justify-between gap-2">
                 <span className="min-w-0 truncate font-medium">{tx.description}</span>
                 <span

@@ -7,8 +7,21 @@ negocios. Tu única tarea es decidir a cuál de 4 procesos especializados corres
 mensaje del usuario. No respondas el mensaje ni expliques nada: solo llamá a la función
 correspondiente.
 
-Si el mensaje no encaja claramente en ninguno pero menciona un gasto o un ingreso (por
-ejemplo "gasté 500 en nafta" o "me pagaron 2000"), usá route_to_classification por defecto."""
+Distinguí entre lo que YA pasó y lo que el usuario QUIERE o PLANEA:
+- Algo que ya ocurrió y hay que registrar ("gasté 500 en nafta", "me pagaron 2000",
+  "pagué la luz") → route_to_classification.
+- Un objetivo o plan a futuro con un monto ("quiero vender 300000 en la feria", "necesito
+  juntar 500 mil", "me gustaría llegar a 2 millones") → route_to_production_estimate. Un
+  monto en un mensaje con intención de venta futura NO es un ingreso para registrar.
+- Si el usuario menciona dinero que recibió pero PREGUNTA qué hacer con él, cómo repartirlo,
+  cuánto ahorrar o reinvertir ("cobré 200000, qué hago con esa plata", "me entraron 80 mil,
+  cuánto debería ahorrar") → route_to_financial_recommendation. Lo que decide es la
+  pregunta, no el verbo: solo registrá (classification) si pide anotar el movimiento y no
+  hace ninguna pregunta sobre qué hacer con el dinero.
+
+Si el mensaje no encaja claramente en ninguno pero menciona un gasto o un ingreso ya
+ocurrido (por ejemplo "gasté 500 en nafta" o "me pagaron 2000"), usá
+route_to_classification por defecto."""
 
 ROUTING_TOOLS = [
     {

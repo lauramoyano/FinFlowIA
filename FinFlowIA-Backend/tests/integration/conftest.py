@@ -16,7 +16,9 @@ from src.shared.domain.base_entity import Base
 # and database are both literally "financeai", so a naive substring replace
 # also corrupts the username.
 _test_url = make_url(settings.database_url)
-TEST_DATABASE_URL = str(_test_url.set(database=f"{_test_url.database}_test"))
+# Keep it a URL object: str(URL) masks the password as "***" in SQLAlchemy 2.x,
+# which only goes unnoticed against a passwordless local Postgres (CI has one).
+TEST_DATABASE_URL = _test_url.set(database=f"{_test_url.database}_test")
 
 
 @pytest_asyncio.fixture

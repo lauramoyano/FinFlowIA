@@ -1,0 +1,39 @@
+{
+  "title": "Panel",
+  "overviewFor": "Resumen de {{period}}",
+  "loadError": "No se pudieron cargar los datos del panel. Intentá de nuevo.",
+  "summary": {
+    "totalIncome": "Ingresos totales",
+    "totalExpenses": "Gastos totales",
+    "netBalance": "Balance neto"
+  },
+  "charts": {
+    "expenseBreakdown": "Desglose de gastos",
+    "noExpenseData": "No hay datos de gastos para este período",
+    "incomeSources": "Fuentes de ingreso",
+    "noIncomeData": "No hay datos de ingresos para este período",
+    "categoryBreakdown": "Desglose por categoría",
+    "noData": "No hay datos disponibles",
+    "transactionCount_one": "{{count}} transacción",
+    "transactionCount_other": "{{count}} transacciones",
+    "amount": "Monto",
+    "waterfall": "Flujo de ingresos y gastos",
+    "waterfallIncome": "Ingresos",
+    "waterfallBalance": "Balance",
+    "combined": "Ingresos vs. gastos en el tiempo",
+    "incomeVsExpense": "Ingresos vs. gastos",
+    "trend": "Tendencia de balance",
+    "income": "Ingresos",
+    "expense": "Gastos",
+    "noChartData": "No hay datos para este período"
+  },
+  "filters": {
+    "granularityLabel": "Agrupar por",
+    "granularityDay": "Día",
+    "granularityMonth": "Mes",
+    "granularityYear": "Año",
+    "fromLabel": "Desde",
+    "toLabel": "Hasta",
+    "apply": "Aplicar"
+  }
+}

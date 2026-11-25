@@ -1,0 +1,28 @@
+# Development Dockerfile with hot reload
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install uv
+RUN pip install uv
+
+# Copy dependency files
+COPY pyproject.toml ./
+
+# Install all dependencies including dev
+RUN uv sync || pip install fastapi "uvicorn[standard]" "sqlalchemy[asyncio]" asyncpg alembic "pydantic[email]" pydantic-settings "python-jose[cryptography]" "passlib[bcrypt]" httpx tenacity structlog prometheus-client anthropic openai "redis[hiredis]" python-multipart pytest pytest-asyncio pytest-cov ruff mypy
+
+# Copy source code (will be overridden by volume mount in docker-compose)
+COPY src/ ./src/
+
+ENV PYTHONPATH="/app"
+
+EXPOSE 8000
+
+# Hot reload enabled for development
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--reload-dir", "/app/src"]

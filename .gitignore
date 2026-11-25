@@ -1,0 +1,42 @@
+# Environment files (never commit secrets)
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.test
+!.env.development
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Node / frontend
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+coverage/
+npm-debug.log*
+
+# Logs
+*.log
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

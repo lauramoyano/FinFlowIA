@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "FinFlowIA",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

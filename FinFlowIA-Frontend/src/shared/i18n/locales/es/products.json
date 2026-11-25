@@ -1,0 +1,38 @@
+{
+  "page": {
+    "title": "Productos",
+    "subtitle": "Registrá tus productos con su costo de insumo y precio de venta por unidad — el chat los usa para estimar costos de producción y metas de venta."
+  },
+  "list": {
+    "columns": {
+      "name": "Producto",
+      "cost": "Costo por unidad",
+      "salePrice": "Precio de venta"
+    },
+    "empty": "Todavía no registraste productos",
+    "noPrice": "Sin precio",
+    "edit": "Editar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar"
+  },
+  "form": {
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Ej. Torta",
+    "unitLabelLabel": "Unidad (opcional)",
+    "unitLabelPlaceholder": "Ej. unidad, kg",
+    "costLabel": "Costo de insumo por unidad",
+    "salePriceLabel": "Precio de venta por unidad",
+    "submit": "Agregar producto",
+    "createError": "No se pudo crear el producto. Intentá de nuevo.",
+    "validation": {
+      "nameRequired": "El nombre es obligatorio",
+      "nameTooLong": "El nombre es demasiado largo",
+      "unitLabelTooLong": "La unidad es demasiado larga",
+      "costRequired": "El costo es obligatorio",
+      "costMustBePositive": "El costo debe ser un número positivo",
+      "salePriceRequired": "El precio de venta es obligatorio",
+      "salePriceMustBePositive": "El precio de venta debe ser un número positivo"
+    }
+  }
+}

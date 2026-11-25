@@ -1,0 +1,67 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    volumes:
+      - ./src:/app/src
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - finflowia
+
+  frontend:
+    build:
+      context: ../FinFlowIA-Frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ../FinFlowIA-Frontend/src:/app/src
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    networks:
+      - finflowia
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: financeai
+      POSTGRES_USER: financeai
+      POSTGRES_PASSWORD: local_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U financeai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    networks:
+      - finflowia
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "6379:6379"
+    networks:
+      - finflowia
+
+volumes:
+  postgres_data:
+
+networks:
+  finflowia:
+    driver: bridge

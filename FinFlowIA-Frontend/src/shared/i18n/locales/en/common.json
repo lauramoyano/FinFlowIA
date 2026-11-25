@@ -1,0 +1,27 @@
+{
+  "appName": "FinFlowIA",
+  "loading": "Loading...",
+  "logout": "Log out",
+  "openMenu": "Open menu",
+  "theme": {
+    "toggle": "Toggle theme",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "previous": "Previous",
+    "next": "Next",
+    "retry": "Retry"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "notFound": "Not found",
+    "boundaryTitle": "Something went wrong"
+  }
+}

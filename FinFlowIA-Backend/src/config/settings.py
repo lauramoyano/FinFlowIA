@@ -1,4 +1,7 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Annotated
+
+from pydantic import field_validator
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -13,7 +16,8 @@ class Settings(BaseSettings):
     app_name: str = "FinanceAI"
     debug: bool = False
     secret_key: str = "change-me-in-production"
-    cors_origins: list[str] = ["http://localhost:5173"]
+    # Comma-separated in the environment (CORS_ORIGINS=https://a.app,https://b.app)
+    cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:5173"]
 
     # Database
     database_url: str = "postgresql+asyncpg://financeai:local_password@localhost:5432/financeai"
@@ -38,6 +42,34 @@ class Settings(BaseSettings):
     prometheus_enabled: bool = True
     otel_exporter_otlp_endpoint: str | None = None
     log_level: str = "INFO"
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def _split_origins(cls, value: object) -> object:
+        if isinstance(value, str):
+            value = value.strip()
+            if value.startswith("["):
+                import json
+
+                return json.loads(value)
+            return [o.strip().rstrip("/") for o in value.split(",") if o.strip()]
+        return value
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def _async_database_url(cls, value: object) -> object:
+        """Accept the URL as hosting providers hand it out (Neon, Render, ...)."""
+        if not isinstance(value, str):
+            return value
+        for prefix in ("postgres://", "postgresql://"):
+            if value.startswith(prefix):
+                value = "postgresql+asyncpg://" + value[len(prefix) :]
+        # asyncpg does not understand libpq's sslmode / channel_binding params
+        value = value.replace("sslmode=", "ssl=")
+        value = value.replace("&channel_binding=require", "").replace(
+            "channel_binding=require&", ""
+        )
+        return value
 
 
 settings = Settings()
